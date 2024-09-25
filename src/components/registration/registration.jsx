@@ -1,7 +1,8 @@
 import React from 'react'
+import RegisterForm from './registerForm'
 
 function Registration() {
-    return <div>Registration</div>
+    return <RegisterForm />
 }
 
 export default Registration

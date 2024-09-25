@@ -3,6 +3,7 @@ import React from 'react'
 import Header from '../components/header'
 
 function Root() {
+    console.log('Root')
     return (
         <>
             <Header />

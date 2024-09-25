@@ -9,10 +9,10 @@
 }
 .main{
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   border: 1px solid blue;
 }
+
 .sidebar{
   width: 20%;
   height: 100vh;
@@ -24,4 +24,8 @@
   width: 200px;
   background-color: rgb(178, 240, 178);
 
+}
+
+.registration {
+  background-color: brown;
 }
