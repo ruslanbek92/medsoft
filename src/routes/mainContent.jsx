@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
 import { doc, getDoc } from 'firebase/firestore'
-import Sidebar from './sidebar'
+import { Outlet } from 'react-router-dom'
+import Sidebar from '../components/sidebar'
 import { auth, db } from '../firebaseconfig'
 
 function MainContent() {
+    console.log('MainContent')
     const [role, setRole] = useState(null)
     const [loading, setLoading] = useState(true)
     useEffect(() => {
@@ -26,11 +28,11 @@ function MainContent() {
     return (
         <main className="main">
             {loading ? (
-                'Loading'
+                'loading'
             ) : (
                 <>
-                    <Sidebar />
-                    <div>Role:{role}</div>
+                    <Sidebar role={role} />
+                    <Outlet />
                 </>
             )}
         </main>

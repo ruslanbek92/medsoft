@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import React from 'react'
 import { auth } from '../firebaseconfig'
+import Input from './input'
 
 function SignIn() {
     const navigate = useNavigate()
@@ -19,16 +20,23 @@ function SignIn() {
         <form className="form" onSubmit={handleSignIn}>
             <h2>Please sign in</h2>
             {/* eslint-disable-next-line */}
-            <label htmlFor="login">Login</label>
-            <input type="text" id="login" name="login" required />
+            <Input
+                type="text"
+                id="login"
+                name="login"
+                label="Login"
+                required={true}
+            />
             {/* eslint-disable-next-line */}
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <Input
+                type="password"
+                id="password"
+                name="password"
+                label="Password"
+                required={true}
+            />
             {/* eslint-disable-next-line */}
-            <label htmlFor="submit"></label>
-            <button type="submit" id="submit">
-                sign in
-            </button>
+            <Input type="submit" id="submit" name="submit" />
         </form>
     )
 }
