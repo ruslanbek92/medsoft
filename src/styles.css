@@ -1,3 +1,9 @@
+li{
+  list-style-type: none;
+}
+a{
+  text-decoration: none;
+}
 .header {
   padding: 10px;
   display: flex;
@@ -26,6 +32,20 @@
 
 }
 
-.registration {
-  background-color: brown;
+
+.pt-card,
+.queue,
+.queue-pt{
+  display: flex;
+  padding: 5px;
+  margin: 5px;
+  gap: 15px;
+  background-color: aquamarine;
+  border-radius: 5px;
+}
+.room{
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid red;
 }

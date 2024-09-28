@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { doc, getDoc } from 'firebase/firestore'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigation } from 'react-router-dom'
 import Sidebar from '../components/sidebar'
 import { auth, db } from '../firebaseconfig'
 
@@ -9,6 +9,7 @@ function MainContent() {
     console.log('MainContent')
     const [role, setRole] = useState(null)
     const [loading, setLoading] = useState(true)
+    const navigation = useNavigation()
     useEffect(() => {
         async function getUser() {
             const { currentUser } = auth
@@ -32,7 +33,8 @@ function MainContent() {
             ) : (
                 <>
                     <Sidebar role={role} />
-                    <Outlet />
+                    {navigation.state === 'loading' && <p>Loading...</p>}
+                    {navigation.state !== 'loading' && <Outlet />}
                 </>
             )}
         </main>
