@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore'
 
+import { Link } from 'react-router-dom'
 import { db } from '../../firebaseconfig'
 
 /* eslint-disable-next-line */
@@ -35,9 +36,11 @@ function RoomQueue({ id }) {
                     <h3 style={{ textAlign: 'center' }}>{id}</h3>
                     <ul>
                         {patientsInQueue.map((item, index) => (
-                            <li className="queue-pt" key={item.name}>
-                                Number: {index + 1} Patient: {item.name},
-                                Doctor: {item.doctor}{' '}
+                            <li className="queue-item" key={item.name}>
+                                <Link className="queue-pt" to>
+                                    T/R: {index + 1} Bemor: {item.name}
+                                    Doktor: {item.doctor}{' '}
+                                </Link>
                                 <button
                                     type="button"
                                     onClick={() => handleDelete(item.id)}
