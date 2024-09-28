@@ -35,13 +35,16 @@ a{
 
 .pt-card,
 .queue,
-.queue-pt{
+.queue-pt,
+.queue-item{
   display: flex;
+  align-items: center;
   padding: 5px;
   margin: 5px;
   gap: 15px;
   background-color: aquamarine;
   border-radius: 5px;
+  border: 1px solid blue;
 }
 .room{
   padding: 5px;
