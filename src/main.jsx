@@ -12,7 +12,9 @@ import Reports from './components/reports'
 import Payment from './components/payment'
 import Doctors from './components/doctors'
 import Personnel from './components/personnel'
-import Patients from './components/patients'
+import Patients from './components/patients/patients'
+import PatientDetails from './components/patients/patientDetails'
+import Queue, { loader as queueLoader } from './components/queues/queue'
 
 const router = createBrowserRouter([
     {
@@ -51,6 +53,15 @@ const router = createBrowserRouter([
                     {
                         path: 'patients',
                         element: <Patients />,
+                    },
+                    {
+                        path: 'patients/:id',
+                        element: <PatientDetails />,
+                    },
+                    {
+                        path: 'queue',
+                        element: <Queue />,
+                        loader: queueLoader,
                     },
                 ],
             },

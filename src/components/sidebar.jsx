@@ -54,6 +54,9 @@ function Sidebar({ role }) {
                     <li>
                         <Link to="/main/patients">Bemorlar</Link>
                     </li>
+                    <li>
+                        <Link to="/main/queue">Navbatlar</Link>
+                    </li>
                 </ul>
             )
             break
