@@ -13,7 +13,9 @@ import Payment from './components/payment'
 import Doctors from './components/doctors'
 import Personnel from './components/personnel'
 import Patients from './components/patients/patients'
-import PatientDetails from './components/patients/patientDetails'
+import PatientDetails, {
+    loader as patientDetailsLoader,
+} from './components/patients/patientDetails'
 import Queue, { loader as queueLoader } from './components/queues/queue'
 
 const router = createBrowserRouter([
@@ -57,6 +59,7 @@ const router = createBrowserRouter([
                     {
                         path: 'patients/:id',
                         element: <PatientDetails />,
+                        loader: patientDetailsLoader,
                     },
                     {
                         path: 'queue',

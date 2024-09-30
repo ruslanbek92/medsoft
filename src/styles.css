@@ -36,7 +36,8 @@ a{
 .pt-card,
 .queue,
 .queue-pt,
-.queue-item{
+.queue-item,
+.payment-item{
   display: flex;
   align-items: center;
   padding: 5px;
@@ -46,7 +47,10 @@ a{
   border-radius: 5px;
   border: 1px solid blue;
 }
-.room{
+.room,
+.pt-detail,
+.pt-assign,
+.modal-form{
   padding: 5px;
   margin: 5px;
   border-radius: 5px;
