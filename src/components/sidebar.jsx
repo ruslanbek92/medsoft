@@ -70,7 +70,7 @@ function Sidebar({ role }) {
         case 'cashier':
             ;<ul>
                 <li>
-                    <Link to="/main/payments">Tolov</Link>
+                    <Link to="/main/payments">To&apos;lov</Link>
                 </li>
             </ul>
             break
