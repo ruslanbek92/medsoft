@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "firebase": "^10.13.1",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2"
@@ -35,5 +37,10 @@
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "vite": "^5.4.1"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "vite.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

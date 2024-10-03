@@ -8,6 +8,7 @@ import PatientAssign from './patientAssign'
 function PatientDetails() {
     const documentSnapshot = useLoaderData()
     const patient = documentSnapshot.data()
+    console.log('PAtient details', patient)
 
     return (
         <div className="pt-detail">
