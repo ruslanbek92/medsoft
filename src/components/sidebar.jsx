@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 /* eslint-disable-next-line */
 function Sidebar({ role }) {
-    console.log('Sidebar')
+    console.log('Sidebar role', role)
     let content
     /* eslint-disable-react/prop-types */
     switch (role) {
@@ -61,18 +61,22 @@ function Sidebar({ role }) {
             )
             break
         case 'investigator':
-            ;<ul>
-                <li>
-                    <Link to="/main/investigations">Tekshiruvlar</Link>
-                </li>
-            </ul>
+            content = (
+                <ul>
+                    <li>
+                        <Link to="/main/investigations">Tekshiruvlar</Link>
+                    </li>
+                </ul>
+            )
             break
         case 'cashier':
-            ;<ul>
-                <li>
-                    <Link to="/main/payments">To&apos;lov</Link>
-                </li>
-            </ul>
+            content = (
+                <ul>
+                    <li>
+                        <Link to="/main/payments">To&apos;lov</Link>
+                    </li>
+                </ul>
+            )
             break
         default:
             break

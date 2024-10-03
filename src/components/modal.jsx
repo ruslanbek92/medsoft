@@ -3,7 +3,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { db } from '../firebaseconfig'
 
 // eslint-disable-next-line
-const Modal = forwardRef(function Modal({ patientId }, ref) {
+const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
     const [firstSelectState, setFirstStateSelect] = useState(null)
     const [secondSelectState, setSecondSelectState] = useState(null)
     const [formLoading, setformLoading] = useState(false)
@@ -33,7 +33,6 @@ const Modal = forwardRef(function Modal({ patientId }, ref) {
         const data = JSON.parse(
             Object.fromEntries(new FormData(e.target).entries()).service
         )
-        console.log('data', data)
         setformLoading(true)
         await addPayment({
             service: data.name,
@@ -44,6 +43,10 @@ const Modal = forwardRef(function Modal({ patientId }, ref) {
         })
         e.target.reset()
         setformLoading(false)
+        dialog.current.close()
+        onPaymentsChange()
+    }
+    function handleModalClose() {
         dialog.current.close()
     }
     return (
@@ -91,9 +94,13 @@ const Modal = forwardRef(function Modal({ patientId }, ref) {
                     <button type="submit">yuborish</button>
                 </form>
             )}
-            <form method="dialog">
-                <button type="button">close</button>
-            </form>
+            {!formLoading && (
+                <form method="dialog">
+                    <button type="button" onClick={handleModalClose}>
+                        close
+                    </button>
+                </form>
+            )}
         </dialog>
     )
 })

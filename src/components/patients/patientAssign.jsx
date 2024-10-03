@@ -8,16 +8,19 @@ const PatientAssign = ({ patientId }) => {
     const [loading, setLoading] = useState(false)
     const [payments, setPayments] = useState([])
     const modalRef = useRef(null)
+    async function getPaymentsById(id) {
+        setLoading(true)
+        const collectionRef = collection(db, 'payments')
+        const q = query(collectionRef, where('patientId', '==', id))
+        const querySnapshot = await getDocs(q)
+        setPayments(querySnapshot.docs.map((item) => item.data()))
+        setLoading(false)
+    }
+    const handlePaymentsChange = () => {
+        getPaymentsById(patientId)
+    }
     useEffect(() => {
-        async function getPayments(id) {
-            setLoading(true)
-            const collectionRef = collection(db, 'payments')
-            const q = query(collectionRef, where('patientId', '==', id))
-            const querySnapshot = await getDocs(q)
-            setPayments(querySnapshot.docs.map((item) => item.data()))
-            setLoading(false)
-        }
-        getPayments(patientId)
+        getPaymentsById(patientId)
     }, [patientId])
     function handleAddPayment() {
         modalRef.current.open()
@@ -30,10 +33,10 @@ const PatientAssign = ({ patientId }) => {
                     <h3>To&apos;lovlar</h3>
                     <ul>
                         {/* eslint-disable-next-line */}
-                        {payments.map((el, index) => (
+                        {payments.map((el) => (
                             <li
                                 className="payment-item"
-                                key={index}
+                                key={el.date}
                             >{`Xizmat: ${el.service}  summa: ${el.sum}  status: ${el.status}  sana: ${el.date}`}</li>
                         ))}
                     </ul>
@@ -42,7 +45,11 @@ const PatientAssign = ({ patientId }) => {
                     </button>
                 </>
             )}
-            <Modal patientId={patientId} ref={modalRef} />
+            <Modal
+                patientId={patientId}
+                onPaymentsChange={handlePaymentsChange}
+                ref={modalRef}
+            />
         </div>
     )
 }
