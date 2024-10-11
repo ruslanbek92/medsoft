@@ -1,27 +1,27 @@
-import { collection, getDocs, query, where } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
-import { db } from '../../firebaseconfig'
 import Modal from '../modal'
+import { getPaymentsById } from '../../firestore/firestore'
 
 /* eslint-disable-next-line */
 const PatientAssign = ({ patientId }) => {
     const [loading, setLoading] = useState(false)
     const [payments, setPayments] = useState([])
     const modalRef = useRef(null)
-    async function getPaymentsById(id) {
+
+    async function getPatientPayments(id) {
         setLoading(true)
-        const collectionRef = collection(db, 'payments')
-        const q = query(collectionRef, where('patientId', '==', id))
-        const querySnapshot = await getDocs(q)
+        const querySnapshot = await getPaymentsById(id)
         setPayments(querySnapshot.docs.map((item) => item.data()))
         setLoading(false)
     }
+
     const handlePaymentsChange = () => {
-        getPaymentsById(patientId)
+        getPatientPayments(patientId)
     }
     useEffect(() => {
-        getPaymentsById(patientId)
+        getPatientPayments(patientId)
     }, [patientId])
+
     function handleAddPayment() {
         modalRef.current.open()
     }

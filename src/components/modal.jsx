@@ -1,6 +1,6 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore'
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { db } from '../firebaseconfig'
+import { createPortal } from 'react-dom'
+import { addPayment, getDoctorsOrInvestigations } from '../firestore/firestore'
 
 // eslint-disable-next-line
 const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
@@ -8,6 +8,7 @@ const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
     const [secondSelectState, setSecondSelectState] = useState(null)
     const [formLoading, setformLoading] = useState(false)
     const dialog = useRef()
+
     useImperativeHandle(ref, () => {
         return {
             open() {
@@ -15,13 +16,7 @@ const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
             },
         }
     }, [])
-    async function getDoctorsOrInvestigations(type) {
-        const querySnapshot = await getDocs(collection(db, type))
-        return querySnapshot.docs.map((item) => item.data())
-    }
-    async function addPayment(payment) {
-        await addDoc(collection(db, 'payments'), payment)
-    }
+
     async function handleSelectChange(e) {
         setFirstStateSelect(e.target.value)
         const result = await getDoctorsOrInvestigations(e.target.value)
@@ -49,11 +44,15 @@ const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
     function handleModalClose() {
         dialog.current.close()
     }
-    return (
+    return createPortal(
         <dialog ref={dialog}>
             {formLoading && 'Loading'}
             {!formLoading && (
-                <form className="modal-form" onSubmit={handleSubmit}>
+                <form
+                    method="post"
+                    className="modal-form"
+                    onSubmit={handleSubmit}
+                >
                     <fieldset>
                         <legend>Xizmat turi:</legend>
                         {/* eslint-disable-next-line */}
@@ -101,7 +100,8 @@ const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
                     </button>
                 </form>
             )}
-        </dialog>
+        </dialog>,
+        document.getElementById('modal')
     )
 })
 

@@ -8,23 +8,24 @@ import SignIn from './components/signIn'
 import MainContent from './routes/mainContent'
 import Registration, {
     loader as registrationLoader,
-} from './components/registration/registration'
+    action as registrationAction,
+} from './pages/registration'
 import Investigations, {
     loader as investigationsLoader,
-} from './components/investigations'
-import Reports, { loader as reportsLoader } from './components/reports'
-import Payment, {
-    loader as paymentsLoader,
-} from './components/payments/payment'
-import Doctors, { loader as doctorsLoader } from './components/doctors'
-import Personnel, { loader as personnelLoader } from './components/personnel'
+} from './pages/investigations'
+import Reports, { loader as reportsLoader } from './pages/reports'
+import Payment, { loader as paymentsLoader } from './pages/payment'
+import Doctors, { loader as doctorsLoader } from './pages/doctors'
+import Personnel, { loader as personnelLoader } from './pages/personnel'
 import Patients, {
     loader as patientsLoader,
-} from './components/patients/patients'
+    action as patientsAction,
+} from './pages/patients'
 import PatientDetails, {
     loader as patientDetailsLoader,
 } from './components/patients/patientDetails'
-import Queue, { loader as queueLoader } from './components/queues/queue'
+import Queue, { loader as queueLoader } from './pages/queue'
+import Error from './pages/error'
 
 const router = createBrowserRouter([
     {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
                         path: 'registration',
                         element: <Registration />,
                         loader: registrationLoader,
+                        action: registrationAction,
                     },
                     {
                         path: 'investigations',
@@ -70,6 +72,7 @@ const router = createBrowserRouter([
                         path: 'patients',
                         element: <Patients />,
                         loader: patientsLoader,
+                        action: patientsAction,
                     },
                     {
                         path: 'patients/:id',
@@ -84,6 +87,7 @@ const router = createBrowserRouter([
                 ],
             },
         ],
+        errorElement: <Error />,
     },
 ])
 
