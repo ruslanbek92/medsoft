@@ -32,7 +32,6 @@ function MainContent() {
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
-            console.log('USER', user)
             if (user) {
                 getUser(user)
             } else {

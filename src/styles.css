@@ -56,3 +56,9 @@ a{
   border-radius: 5px;
   border: 1px solid red;
 }
+.error{
+  text-align: center;
+  color: red;
+  font-size: 45px;
+  font-weight: bold;
+}
