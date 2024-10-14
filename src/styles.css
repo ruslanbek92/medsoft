@@ -62,3 +62,6 @@ a{
   font-size: 45px;
   font-weight: bold;
 }
+.unpaid{
+  background-color: rgb(224, 101, 111);
+}
