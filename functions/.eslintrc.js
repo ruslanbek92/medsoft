@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   env: {
     es6: true,
@@ -5,7 +6,6 @@ module.exports = {
   },
   parserOptions: {
     "ecmaVersion": 2018,
-    "sourceType": "module",
   },
   extends: [
     "eslint:recommended",

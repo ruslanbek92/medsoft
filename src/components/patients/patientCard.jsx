@@ -2,7 +2,8 @@ import React from 'react'
 /* eslint-disable-next-line */
 const PatientCard = ({ patient }) => {
     return (
-        <div className="pt-card">
+        // eslint-disable-next-line react/prop-types
+        <div className={`pt-card ${patient.hasDebt ? 'unpaid' : ''}`}>
             {/* eslint-disable-next-line */}
             <p>Id: {patient['pt-passport']}</p>
             {/* eslint-disable-next-line */}

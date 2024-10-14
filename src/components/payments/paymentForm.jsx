@@ -1,21 +1,18 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { addPayment, getDoctorsOrInvestigations } from '../firestore/firestore'
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react'
+import {
+    addPayment,
+    getDoctorsOrInvestigations,
+} from '../../firestore/firestore'
+import { useFormSubmit } from '../../hooks/useModalFormSubmit'
 
-// eslint-disable-next-line
-const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
+export const PaymentForm = ({ patientId, onModalClose }) => {
     const [firstSelectState, setFirstStateSelect] = useState(null)
     const [secondSelectState, setSecondSelectState] = useState(null)
-    const [formLoading, setformLoading] = useState(false)
-    const dialog = useRef()
-
-    useImperativeHandle(ref, () => {
-        return {
-            open() {
-                dialog.current.showModal()
-            },
-        }
-    }, [])
+    const { formLoading, handleSubmit } = useFormSubmit(
+        handleSubmitLogic,
+        onModalClose
+    )
 
     async function handleSelectChange(e) {
         setFirstStateSelect(e.target.value)
@@ -23,30 +20,23 @@ const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
         setSecondSelectState(result)
     }
 
-    async function handleSubmit(e) {
-        e.preventDefault()
+    async function handleSubmitLogic(e) {
         const data = JSON.parse(
             Object.fromEntries(new FormData(e.target).entries()).service
         )
-        setformLoading(true)
-        await addPayment({
-            service: data.name,
-            sum: data.cost,
-            patientId,
-            status: 'unpaid',
-            date: new Date(),
-        })
-        e.target.reset()
-        setformLoading(false)
-        dialog.current.close()
-        onPaymentsChange()
+        await addPayment(
+            {
+                name: data.name,
+                summ: data.cost,
+                status: 'unpaid',
+                date: new Date(),
+            },
+            patientId
+        )
     }
-    function handleModalClose() {
-        dialog.current.close()
-    }
-    return createPortal(
-        <dialog ref={dialog}>
-            {formLoading && 'Loading'}
+    return (
+        <>
+            {formLoading && 'Yuklanmoqda...'}
             {!formLoading && (
                 <form
                     method="post"
@@ -95,14 +85,11 @@ const Modal = forwardRef(function Modal({ patientId, onPaymentsChange }, ref) {
             )}
             {!formLoading && (
                 <form method="dialog">
-                    <button type="button" onClick={handleModalClose}>
-                        close
+                    <button type="button" onClick={onModalClose}>
+                        yopish
                     </button>
                 </form>
             )}
-        </dialog>,
-        document.getElementById('modal')
+        </>
     )
-})
-
-export default Modal
+}
