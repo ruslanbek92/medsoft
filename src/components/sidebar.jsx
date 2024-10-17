@@ -16,6 +16,9 @@ function Sidebar({ role }) {
                         <Link to="/main/patients">Bemorlar</Link>
                     </li>
                     <li>
+                        <Link to="/main/queue">Navbatlar</Link>
+                    </li>
+                    <li>
                         <Link to="/main/investigations">Tekshiruvlar</Link>
                     </li>
                     <li>
@@ -42,6 +45,9 @@ function Sidebar({ role }) {
                     <li>
                         <Link to="/main/reports">Hisobotlar</Link>
                     </li>
+                    <li>
+                        <Link to="/main/queue">Navbatlar</Link>
+                    </li>
                 </ul>
             )
             break
@@ -65,6 +71,9 @@ function Sidebar({ role }) {
                 <ul>
                     <li>
                         <Link to="/main/investigations">Tekshiruvlar</Link>
+                    </li>
+                    <li>
+                        <Link to="/main/queue">Navbatlar</Link>
                     </li>
                 </ul>
             )

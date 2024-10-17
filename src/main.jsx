@@ -5,7 +5,7 @@ import './styles.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Root from './routes/root'
 import SignIn from './components/signIn'
-import MainContent from './routes/mainContent'
+import MainContent, { loader as mainContentLoader } from './routes/mainContent'
 import Registration, {
     loader as registrationLoader,
     action as registrationAction,
@@ -85,6 +85,7 @@ const router = createBrowserRouter([
                         loader: queueLoader,
                     },
                 ],
+                loader: mainContentLoader,
             },
         ],
         errorElement: <Error />,
