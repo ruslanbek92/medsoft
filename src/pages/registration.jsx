@@ -1,13 +1,7 @@
 import React from 'react'
-import { onAuthStateChanged } from 'firebase/auth'
 import { Form, redirect, useNavigation } from 'react-router-dom'
-import { auth } from '../firebaseconfig'
 import Input from '../components/input'
-import { createPatient } from '../firestore/firestore'
-
-const cashierID = import.meta.env.VITE_CASHIER_ID
-const doctorID = import.meta.env.VITE_DOCTOR_ID
-const investigatorID = import.meta.env.VITE_INVESTIGATOR_ID
+import { createPatient, getCurrentUser } from '../firestore/firestore'
 
 function Registration() {
     console.log('registration')
@@ -15,7 +9,7 @@ function Registration() {
 
     const content =
         navigation.state === 'submitting' ? (
-            'Submitting'
+            "Jo'natilmoqda"
         ) : (
             <Form method="post">
                 <Input
@@ -63,22 +57,22 @@ function Registration() {
         )
     return content
 }
-export function loader() {
-    return new Promise((resolve) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (
-                    user.uid === cashierID ||
-                    user.uid === doctorID ||
-                    user.uid === investigatorID
-                ) {
-                    resolve(redirect('/'))
-                } else {
-                    resolve(null)
-                }
-            } else resolve(null)
-        })
-    })
+
+export async function loader() {
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+    console.log('user', user)
+    if (user) {
+        const currentUser = await getCurrentUser(user)
+        if (
+            currentUser.role === 'cashier' ||
+            currentUser.role === 'doctor' ||
+            currentUser.role === 'investigator'
+        ) {
+            return redirect('/')
+        } else {
+            return null
+        }
+    } else return null
 }
 
 export async function action({ request }) {

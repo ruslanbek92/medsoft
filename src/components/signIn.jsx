@@ -13,6 +13,7 @@ function SignIn() {
         )
 
         signInWithEmailAndPassword(auth, login, password).then(() => {
+            console.log('sign in')
             navigate('/main')
         })
     }

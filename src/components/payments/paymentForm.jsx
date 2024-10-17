@@ -27,9 +27,16 @@ export const PaymentForm = ({ patientId, onModalClose }) => {
         await addPayment(
             {
                 name: data.name,
-                summ: data.cost,
+                summ: data.price,
                 status: 'unpaid',
                 date: new Date(),
+                type:
+                    firstSelectState === 'investigations'
+                        ? 'investigation'
+                        : firstSelectState === 'doctors'
+                          ? 'consultation'
+                          : '',
+                isProvided: false,
             },
             patientId
         )

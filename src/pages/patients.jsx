@@ -1,15 +1,20 @@
-import { collection, getDocs } from 'firebase/firestore'
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    where,
+} from 'firebase/firestore'
 import React from 'react'
 import { Link, redirect, useLoaderData } from 'react-router-dom'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth, db } from '../firebaseconfig'
+import { db } from '../firebaseconfig'
 import PatientCard from '../components/patients/patientCard'
-
-const cashierID = import.meta.env.VITE_CASHIER_ID
-const investigatorID = import.meta.env.VITE_INVESTIGATOR_ID
+import { getCurrentUser } from '../firestore/firestore'
 
 function Patients() {
     const patientsData = useLoaderData()
+    console.log('patients', patientsData)
     return (
         <ul>
             {patientsData.map((el) => (
@@ -22,25 +27,57 @@ function Patients() {
         </ul>
     )
 }
-async function getPatients() {
-    const patients = (await getDocs(collection(db, 'patients'))).docs.map(
-        (el) => el.data()
-    )
+async function getPatients(user) {
+    console.log('user', user)
+    const userData = (await getDoc(doc(db, 'users', user.uid))).data()
+    let patients
+    if (userData.role === 'doctor') {
+        patients = await getDoctorPatients(userData.name)
+    } else
+        patients = (await getDocs(collection(db, 'patients'))).docs.map((el) =>
+            el.data()
+        )
     return patients
 }
-export function loader() {
-    return new Promise((resolve) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (user.uid === cashierID || user.uid === investigatorID) {
-                    resolve(redirect('/'))
-                } else {
-                    resolve(getPatients())
-                }
-            } else resolve(null)
-        })
-    })
+
+async function getDoctorPatients(doctorName) {
+    const patientsSnapshot = await getDocs(collection(db, 'patients'))
+    const patientsWithDrName = []
+    for (const patientDoc of patientsSnapshot.docs) {
+        const patientId = patientDoc.id
+        const paymentsQuery = query(
+            collection(db, `patients/${patientId}/payments`),
+            where('name', '==', doctorName),
+            where('status', '==', 'paid')
+        )
+
+        const paymentsSnapshot = await getDocs(paymentsQuery)
+
+        if (!paymentsSnapshot.empty) {
+            patientsWithDrName.push({
+                id: patientId,
+                ...patientDoc.data(),
+            })
+        }
+    }
+
+    return patientsWithDrName
 }
+export async function loader() {
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+    if (user) {
+        const currentUser = await getCurrentUser(user)
+        if (
+            currentUser.role === 'cashier' ||
+            currentUser.role === 'investigator'
+        ) {
+            return redirect('/')
+        } else {
+            return getPatients(user)
+        }
+    } else return null
+}
+
 export async function action() {
     return null
 }

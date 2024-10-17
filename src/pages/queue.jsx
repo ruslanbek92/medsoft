@@ -1,15 +1,11 @@
 import React from 'react'
 import { redirect, useLoaderData } from 'react-router-dom'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '../firebaseconfig'
 import RoomQueue from '../components/queues/roomQueue'
-import { getQueues } from '../firestore/firestore'
-
-const cashierID = import.meta.env.VITE_CASHIER_ID
+import { getCurrentUser, getQueues } from '../firestore/firestore'
 
 function Queue() {
     const queues = useLoaderData()
-
+    console.log('queues', queues)
     return (
         <ul>
             {queues.map((el) => (
@@ -22,16 +18,15 @@ function Queue() {
 }
 
 export async function loader() {
-    return new Promise((resolve) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (user.uid === cashierID) {
-                    resolve(redirect('/'))
-                } else {
-                    resolve(getQueues())
-                }
-            } else resolve(null)
-        })
-    })
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+    if (user) {
+        const currentUser = await getCurrentUser(user)
+        if (currentUser.role === 'cashier') {
+            return redirect('/')
+        } else {
+            return getQueues(user, currentUser.role)
+        }
+    } else return null
 }
+
 export default Queue

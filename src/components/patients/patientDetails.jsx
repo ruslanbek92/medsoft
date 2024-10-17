@@ -1,29 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 
 import { useLoaderData } from 'react-router-dom'
 import { db } from '../../firebaseconfig'
 import PatientAssign from './patientAssign'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '../../firebaseconfig'
 import { ModalComponent } from '../modalComponent'
 import { CashierForm } from '../payments/cashierForm'
-const cashierID = import.meta.env.VITE_CASHIER_ID
+import { getCurrentUser } from '../../firestore/firestore'
+import { DoctorsField } from './doctorsField'
 
 function PatientDetails() {
-    const documentSnapshot = useLoaderData()
-    const patient = documentSnapshot.data()
-    const [isCashierLogged, setIsCashierLogged] = useState(false)
+    const { patient, user } = useLoaderData()
     const dialogRef = useRef()
+    console.log('Detail user', user)
     console.log('patient', patient)
-
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user.uid === cashierID) {
-                setIsCashierLogged(true)
-            } else setIsCashierLogged(false)
-        })
-    }, [])
     function handleOpenModal() {
         dialogRef.current.open()
     }
@@ -37,8 +27,8 @@ function PatientDetails() {
                 <p>Qabul turi: {patient['pt-type']}</p>
                 <p>Bemor identifikatsion raqami: {patient['pt-passport']}</p>
                 <p>Bemor manzili: {patient['pt-address']}</p>
-                <PatientAssign patientId={documentSnapshot.id} />
-                {isCashierLogged && (
+                <PatientAssign patientId={patient.id} />
+                {user.role === 'cashier' && (
                     <>
                         <div className="pt-detail">
                             <button onClick={handleOpenModal}>
@@ -53,13 +43,24 @@ function PatientDetails() {
                         </ModalComponent>
                     </>
                 )}
+                {user.role === 'doctor' && <DoctorsField />}
             </div>
         </>
     )
 }
 
-export async function loader({ params }) {
-    return getDoc(doc(db, 'patients', params.id))
+export async function loader({ params, request }) {
+    console.log('loader request', request)
+    const searchParams = new URL(request.url).searchParams
+    const searchTerm = searchParams.get('name')
+    console.log('term', searchTerm)
+    const documentSnapshot = await getDoc(doc(db, 'patients', params.id))
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+    const user = await getCurrentUser(currentUser)
+    return {
+        patient: { ...documentSnapshot.data(), id: documentSnapshot.id },
+        user,
+    }
 }
 
 export default PatientDetails

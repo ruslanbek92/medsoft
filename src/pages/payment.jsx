@@ -1,11 +1,6 @@
 import React from 'react'
 import { Link, redirect, useLoaderData } from 'react-router-dom'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '../firebaseconfig'
-import { getPatientsWithDebt } from '../firestore/firestore'
-const registrarID = import.meta.env.VITE_REGISTRAR_ID
-const doctorID = import.meta.env.VITE_DOCTOR_ID
-const investigatorID = import.meta.env.VITE_INVESTIGATOR_ID
+import { getCurrentUser, getPatientsWithDebt } from '../firestore/firestore'
 
 function Payment() {
     const payments = useLoaderData()
@@ -27,20 +22,19 @@ function Payment() {
 }
 
 export async function loader() {
-    return new Promise((resolve) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (
-                    user.uid === registrarID ||
-                    user.uid === doctorID ||
-                    user.uid === investigatorID
-                ) {
-                    resolve(redirect('/'))
-                } else {
-                    resolve(getPatientsWithDebt())
-                }
-            } else resolve(null)
-        })
-    })
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+    if (user) {
+        const currentUser = await getCurrentUser(user)
+        if (
+            currentUser.role === 'registration' ||
+            currentUser.role === 'doctor' ||
+            currentUser.role === 'investigator'
+        ) {
+            return redirect('/')
+        } else {
+            return getPatientsWithDebt()
+        }
+    } else return null
 }
+
 export default Payment
