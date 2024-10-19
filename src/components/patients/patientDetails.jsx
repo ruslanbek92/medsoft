@@ -12,8 +12,6 @@ import { DoctorsField } from './doctorsField'
 function PatientDetails() {
     const { patient, user } = useLoaderData()
     const dialogRef = useRef()
-    console.log('Detail user', user)
-    console.log('patient', patient)
     function handleOpenModal() {
         dialogRef.current.open()
     }
@@ -49,11 +47,7 @@ function PatientDetails() {
     )
 }
 
-export async function loader({ params, request }) {
-    console.log('loader request', request)
-    const searchParams = new URL(request.url).searchParams
-    const searchTerm = searchParams.get('name')
-    console.log('term', searchTerm)
+export async function loader({ params }) {
     const documentSnapshot = await getDoc(doc(db, 'patients', params.id))
     const currentUser = JSON.parse(localStorage.getItem('currentUser'))
     const user = await getCurrentUser(currentUser)

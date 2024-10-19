@@ -27,7 +27,7 @@ console.log("patiient ID", params.patientId, "payment id", params.paymentId)
     const patientRef = getFirestore().collection('patients').doc(params.patientId)
     const payment = (await patientRef.collection("payments").doc(params.paymentId).get()).data();
      console.log("payment", payment)
-    if (payment.status === "paid") {
+    if (payment.status === "paid" && !payment.isProvided) {
         const collectionName = payment.type === "investigation"?"investigations":payment.type === "consultation"? "doctors":""
         const roomNum = (await getFirestore().collection(collectionName).get()).docs.map(item=>item.data()).find(item=>item.name ===payment.name).room;
         console.log("number", roomNum)

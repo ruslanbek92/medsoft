@@ -37,7 +37,9 @@ a{
 .queue,
 .queue-pt,
 .queue-item,
-.payment-item{
+.payment-item,
+.pt-recipe,
+.consultation{
   display: flex;
   align-items: center;
   padding: 5px;
@@ -51,7 +53,10 @@ a{
 .pt-detail,
 .pt-assign,
 .dr-field,
-.modal-form{
+.modal-form,
+.pt-consultation,
+.recipe,
+.consultations{
   padding: 5px;
   margin: 5px;
   border-radius: 5px;
