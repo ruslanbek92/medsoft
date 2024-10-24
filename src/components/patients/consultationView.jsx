@@ -7,6 +7,7 @@ export const ConsultationView = ({ consultation, onModalClose }) => {
     const handlePrint = useReactToPrint({
         contentRef,
     })
+    // console.log("view consultation", consultation.recipes)
     return (
         <>
             <div ref={contentRef}>

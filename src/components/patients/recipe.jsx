@@ -33,7 +33,7 @@ export const Recipe = ({ onRecipeChange, recipes }) => {
                 .map((item) => ({ ...item }))
         )
     }
-    console.log('recipes', recipes)
+    // console.log('recipes', recipes)
     return (
         <fieldset>
             <legend>Retseptlar</legend>

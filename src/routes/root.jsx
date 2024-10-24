@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../firebaseconfig'
 
 function Root() {
-    console.log('Root')
+    // console.log('Root')
     const navigation = useNavigation()
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {

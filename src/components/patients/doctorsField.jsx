@@ -29,13 +29,18 @@ export const DoctorsField = () => {
 
     useEffect(() => {
         async function getQueueAndConsultations(roomId, queueId) {
-            const queue = (
-                await getDoc(doc(db, 'queues', roomId, 'queues', queueId))
-            ).data()
+            let queue
+            if (roomId && queueId) {
+                queue = (
+                    await getDoc(doc(db, 'queues', roomId, 'queues', queueId))
+                ).data()
+            }
+
             const currentUser = await getCurrentUser(
                 JSON.parse(localStorage.getItem('currentUser'))
             )
-            console.log('currentuser', currentUser)
+
+            // console.log('currentuser', currentUser)
             const q = query(
                 collection(db, 'consultations'),
                 where('patientId', '==', params.id),
@@ -46,7 +51,7 @@ export const DoctorsField = () => {
                 id: item.id,
             }))
             setConsultations(consultations)
-            setQueue(() => queue)
+            if (queue) setQueue(() => queue)
             setLoading(false)
         }
 
@@ -84,10 +89,10 @@ export const DoctorsField = () => {
             ...item.data(),
             id: item.id,
         }))
-        console.log('upper consultations', consultations)
+        // console.log('upper consultations', consultations)
         setConsultations(consultations)
     }
-
+    // console.log("Doctors field",consultations)
     return (
         <div className="dr-field">
             <h3>Doctors field</h3>

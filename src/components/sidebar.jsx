@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 /* eslint-disable-next-line */
 function Sidebar({ role }) {
-    console.log('Sidebar role', role)
+    // console.log('Sidebar role', role)
     let content
     /* eslint-disable-react/prop-types */
     switch (role) {
@@ -32,6 +32,9 @@ function Sidebar({ role }) {
                     </li>
                     <li>
                         <Link to="/main/personnel">Xodimlar</Link>
+                    </li>
+                    <li>
+                        <Link to="/main/expenditures">Chiqimlar</Link>
                     </li>
                 </ul>
             )
@@ -75,6 +78,9 @@ function Sidebar({ role }) {
                     <li>
                         <Link to="/main/queue">Navbatlar</Link>
                     </li>
+                    <li>
+                        <Link to="/main/reports">Hisobotlar</Link>
+                    </li>
                 </ul>
             )
             break
@@ -83,6 +89,9 @@ function Sidebar({ role }) {
                 <ul>
                     <li>
                         <Link to="/main/payments">To&apos;lov</Link>
+                    </li>
+                    <li>
+                        <Link to="/main/expenditures">Chiqimlar</Link>
                     </li>
                 </ul>
             )

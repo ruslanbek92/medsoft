@@ -39,7 +39,8 @@ a{
 .queue-item,
 .payment-item,
 .pt-recipe,
-.consultation{
+.consultation,
+.income{
   display: flex;
   align-items: center;
   padding: 5px;
@@ -56,7 +57,10 @@ a{
 .modal-form,
 .pt-consultation,
 .recipe,
-.consultations{
+.consultations,
+.expenditure-form,
+.reports-form,
+.expenditure{
   padding: 5px;
   margin: 5px;
   border-radius: 5px;
@@ -70,4 +74,7 @@ a{
 }
 .unpaid{
   background-color: rgb(224, 101, 111);
+}
+.pt-template{
+  background-color: rgb(236, 212, 236);
 }
