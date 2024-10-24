@@ -26,6 +26,16 @@ import PatientDetails, {
 } from './components/patients/patientDetails'
 import Queue, { loader as queueLoader } from './pages/queue'
 import Error from './pages/error'
+import {
+    Expenditures,
+    loader as expendituresLoader,
+    action as expendituresAction,
+} from './pages/expenditures'
+import {
+    ReportDetails,
+    loader as reportDetailsLoader,
+    action as reportDetailsAction,
+} from './components/reports/reportDetails'
 
 const router = createBrowserRouter([
     {
@@ -52,6 +62,12 @@ const router = createBrowserRouter([
                         path: 'reports',
                         element: <Reports />,
                         loader: reportsLoader,
+                    },
+                    {
+                        path: 'reports/:type',
+                        element: <ReportDetails />,
+                        loader: reportDetailsLoader,
+                        action: reportDetailsAction,
                     },
                     {
                         path: 'payments',
@@ -83,6 +99,12 @@ const router = createBrowserRouter([
                         path: 'queue',
                         element: <Queue />,
                         loader: queueLoader,
+                    },
+                    {
+                        path: 'expenditures',
+                        element: <Expenditures />,
+                        loader: expendituresLoader,
+                        action: expendituresAction,
                     },
                 ],
                 loader: mainContentLoader,

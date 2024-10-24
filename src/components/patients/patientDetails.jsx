@@ -25,7 +25,9 @@ function PatientDetails() {
                 <p>Qabul turi: {patient['pt-type']}</p>
                 <p>Bemor identifikatsion raqami: {patient['pt-passport']}</p>
                 <p>Bemor manzili: {patient['pt-address']}</p>
-                <PatientAssign patientId={patient.id} />
+                {user.role !== 'doctor' && (
+                    <PatientAssign patientId={patient.id} />
+                )}
                 {user.role === 'cashier' && (
                     <>
                         <div className="pt-detail">

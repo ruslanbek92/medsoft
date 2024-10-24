@@ -10,14 +10,14 @@ export const Consultations = ({ consultations }) => {
         setConsultation(consultation)
         dialogRef.current.open()
     }
-    console.log('consultId', consultation)
-    console.log('consultations', consultations)
+    // console.log('consultId', consultation)
+    // console.log('consultations', consultations)
     return (
         <div className="consultations">
             <h3>Ko&apos;rik qaydlari</h3>
             <ul>
                 {consultations.map((item) => (
-                    <li className="consultation" key={Date.now()}>
+                    <li className="consultation" key={item.date}>
                         {' '}
                         vaqti {new Date(item.date).toDateString()} to&apos;lov
                         id {item.paymentId} konsultatsiya id:{item.id}

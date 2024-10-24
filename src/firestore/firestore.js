@@ -56,3 +56,66 @@ export async function getDoctorsOrInvestigations(type) {
 export async function createPatient(patient) {
     await setDoc(doc(db, 'patients', patient['pt-passport']), patient)
 }
+
+export async function getPaymentsForReport(name, startDate, endDate) {
+    const patientsSnapshot = await getDocs(collection(db, 'patients'))
+    let filteredPayments = []
+    for (const patientDoc of patientsSnapshot.docs) {
+        const paymentsRef = collection(
+            db,
+            'patients',
+            patientDoc.id,
+            'payments'
+        )
+        let paymentsQuery
+        // Query payments subcollection
+        if (name !== 'cashier') {
+            paymentsQuery = query(
+                paymentsRef,
+                where('name', '==', name),
+                where('isProvided', '==', true),
+                where('payment-details.date', '>=', new Date(startDate)),
+                where('payment-details.date', '<=', new Date(endDate))
+            )
+        } else {
+            paymentsQuery = query(
+                paymentsRef,
+                where('isProvided', '==', true),
+                where('payment-details.date', '>=', new Date(startDate)),
+                where('payment-details.date', '<=', new Date(endDate))
+            )
+        }
+
+        const paymentDocs = await getDocs(paymentsQuery)
+
+        // Collect matching payments
+        paymentDocs.forEach((doc) => {
+            filteredPayments.push({ id: doc.id, ...doc.data(), type: 'income' })
+        })
+    }
+    return filteredPayments
+}
+
+export async function getExpendituresForReport(type, startDate, endDate) {
+    let q
+    if (type !== 'cashier') {
+        q = query(
+            collection(db, 'expenditures'),
+            where('type', '==', type),
+            where('time', '>=', new Date(startDate)),
+            where('time', '<=', new Date(endDate))
+        )
+    } else {
+        q = query(
+            collection(db, 'expenditures'),
+            where('time', '>=', new Date(startDate)),
+            where('time', '<=', new Date(endDate))
+        )
+    }
+    return (await getDocs(q)).docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+        name: item.data().type,
+        type: 'expenditure',
+    }))
+}
