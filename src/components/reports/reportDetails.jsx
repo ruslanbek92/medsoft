@@ -19,7 +19,7 @@ export const ReportDetails = () => {
     const data = useLoaderData()
     const actionData = useActionData()
     const navigation = useNavigation()
-    console.log(' data', actionData)
+    // console.log(' data', actionData)
     return (
         <div>
             {navigation.state === 'submitting' && "Jo'natilmoqda..."}

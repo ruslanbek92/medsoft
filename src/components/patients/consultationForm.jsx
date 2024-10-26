@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Recipe } from './recipe'
 import {
+    addConsultationOrTemplate,
     getCurrentUser,
-    getDoctorsOrInvestigations,
+    getInvestigationsAndTemplates,
 } from '../../firestore/firestore'
-import { addDoc, collection, getDocs } from 'firebase/firestore'
-import { db } from '../../firebaseconfig'
 import Input from '../input'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const ConsultationForm = ({
     patientId,
@@ -15,33 +15,30 @@ export const ConsultationForm = ({
     onNewConsultAdded,
 }) => {
     const [mode, setMode] = useState('registration')
-    const [loading, setLoading] = useState(false)
-    const [investigations, setInvestigations] = useState(null)
-    const [templates, setTemplates] = useState([])
     const [recipes, setRecipes] = useState([])
     const [complaints, setComplaints] = useState('')
     const [diagnosis, setDiagnosis] = useState('')
     const [selectedInvestigations, setSelectedInvestigations] = useState([])
 
     // console.log("mode", mode)
-    useEffect(() => {
-        async function getInvestigationsAndTemplates() {
-            setLoading(true)
-            const investigations =
-                await getDoctorsOrInvestigations('investigations')
-            const templates = (
-                await getDocs(collection(db, 'doctor-templates'))
-            ).docs.map((item) => ({ ...item.data(), id: item.id }))
-            setTemplates(templates)
-            setInvestigations(investigations)
-            setLoading(false)
-        }
-        getInvestigationsAndTemplates()
-    }, [mode])
+
+    const { data, isPending, refetch } = useQuery({
+        queryKey: ['templates', 'investigations'],
+        queryFn: getInvestigationsAndTemplates,
+    })
+    //  console.log("data react query", data)
+
+    const { mutate, isPending: isMutationPending } = useMutation({
+        queryKey: ['templates', 'consultations'],
+        mutationFn: addConsultationOrTemplate,
+        onSuccess: () => {
+            alert('muvaffaqiyatli yuborildi')
+            refetch()
+        },
+    })
 
     async function handleSubmit(e) {
         e.preventDefault()
-        setLoading(true)
         const data = Object.fromEntries(new FormData(e.target).entries())
         const currentUser = await getCurrentUser(
             JSON.parse(localStorage.getItem('currentUser'))
@@ -57,23 +54,14 @@ export const ConsultationForm = ({
             paymentId,
             recipes,
         }
+        mutate({ mode, name: data['template-name'], consultation })
 
-        if (mode === 'template') {
-            // console.log("handle if")
-            await addDoc(collection(db, 'doctor-templates'), {
-                ...consultation,
-                name: data['template-name'],
-            })
-        } else {
-            await addDoc(collection(db, 'consultations'), consultation)
-        }
         setSelectedInvestigations([])
         setRecipes([])
         onNewConsultAdded()
         setComplaints('')
         setDiagnosis('')
         e.target.reset()
-        setLoading(false)
         if (mode === 'template') setMode('registration')
     }
 
@@ -85,7 +73,7 @@ export const ConsultationForm = ({
         setSelectedInvestigations(selectedOptions)
     }
     function handleSelectChange(e) {
-        const currTemplate = templates.find(
+        const currTemplate = data.templates.find(
             (item) => item.name === e.target.value
         )
         setComplaints(currTemplate.complaints)
@@ -118,8 +106,9 @@ export const ConsultationForm = ({
                     ? "Tibbiy ko'rik formasi"
                     : 'shablon formasi'}
             </h3>
-            {loading && 'Yuborilmoqda...'}
-            {!loading && (
+            {isPending && 'Yuklanmoqda...'}
+            {isMutationPending && 'Jonatilmoqda...'}
+            {!isPending && !isMutationPending && !isMutationPending && (
                 <>
                     {mode === 'registration' && (
                         <button onClick={handleAddTemplate}>
@@ -134,7 +123,7 @@ export const ConsultationForm = ({
                                 id="templates"
                                 onChange={(e) => handleSelectChange(e)}
                             >
-                                {templates.map((item) => (
+                                {data?.templates.map((item) => (
                                     <option key={item.id}>{item.name}</option>
                                 ))}
                             </select>
@@ -164,7 +153,7 @@ export const ConsultationForm = ({
                                 onChange={handleInvestigationChange}
                                 multiple
                             >
-                                {investigations?.map((item) => (
+                                {data?.investigations?.map((item) => (
                                     <option key={item.name} value={item.name}>
                                         {item.name}
                                     </option>

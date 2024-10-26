@@ -4,47 +4,53 @@ import {
     addPayment,
     getDoctorsOrInvestigations,
 } from '../../firestore/firestore'
-import { useFormSubmit } from '../../hooks/useModalFormSubmit'
 
-export const PaymentForm = ({ patientId, onModalClose }) => {
+import { useMutation } from '@tanstack/react-query'
+
+export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
     const [firstSelectState, setFirstStateSelect] = useState(null)
     const [secondSelectState, setSecondSelectState] = useState(null)
-    const { formLoading, handleSubmit } = useFormSubmit(
-        handleSubmitLogic,
-        onModalClose
-    )
 
+    const { mutate, isPending } = useMutation({
+        mutationFn: ({ payment, patientId }) => addPayment(payment, patientId),
+        onSuccess: () => {
+            alert("to'lov muvaffaqiyatli qo'shildi")
+            refetchFn()
+        },
+    })
     async function handleSelectChange(e) {
         setFirstStateSelect(e.target.value)
         const result = await getDoctorsOrInvestigations(e.target.value)
         setSecondSelectState(result)
     }
 
-    async function handleSubmitLogic(e) {
+    async function handleSubmit(e) {
+        e.preventDefault()
         const data = JSON.parse(
             Object.fromEntries(new FormData(e.target).entries()).service
         )
-        await addPayment(
-            {
-                name: data.name,
-                summ: data.price,
-                status: 'unpaid',
-                date: new Date(),
-                type:
-                    firstSelectState === 'investigations'
-                        ? 'investigation'
-                        : firstSelectState === 'doctors'
-                          ? 'consultation'
-                          : '',
-                isProvided: false,
-            },
-            patientId
-        )
+        const payment = {
+            name: data.name,
+            summ: data.price,
+            status: 'unpaid',
+            date: new Date(),
+            type:
+                firstSelectState === 'investigations'
+                    ? 'investigation'
+                    : firstSelectState === 'doctors'
+                      ? 'consultation'
+                      : '',
+            isProvided: false,
+        }
+        mutate({ payment, patientId })
+        e.target.reset()
+        onModalClose()
     }
+
     return (
         <>
-            {formLoading && 'Yuklanmoqda...'}
-            {!formLoading && (
+            {isPending && "Qo'shilmoqda..."}
+            {!isPending && (
                 <form
                     method="post"
                     className="modal-form"
@@ -90,7 +96,7 @@ export const PaymentForm = ({ patientId, onModalClose }) => {
                     <button type="submit">yuborish</button>
                 </form>
             )}
-            {!formLoading && (
+            {!isPending && (
                 <form method="dialog">
                     <button type="button" onClick={onModalClose}>
                         yopish

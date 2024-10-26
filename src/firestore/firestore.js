@@ -48,15 +48,65 @@ export async function getQueues(user, userRole) {
         return querySnapshot.docs.map((item) => ({ id: item.id }))
     }
 }
+export async function getQueueById(roomId, queueId) {
+    if (roomId && queueId) {
+        const queue = (
+            await getDoc(doc(db, 'queues', roomId, 'queues', queueId))
+        ).data()
+        if (!queue) {
+            return null
+        }
+        return queue
+    }
+    return null
+}
+export async function getRoomQueue(roomId) {
+    const querySnapshot = await getDocs(
+        collection(db, 'queues', roomId + '', 'queues')
+    )
+    return querySnapshot.docs.map((el) => ({ ...el.data(), id: el.id }))
+}
 export async function getDoctorsOrInvestigations(type) {
     const querySnapshot = await getDocs(collection(db, type))
     return querySnapshot.docs.map((item) => item.data())
 }
 
+export async function getPatientConsultations(patientId) {
+    const currentUser = await getCurrentUser(
+        JSON.parse(localStorage.getItem('currentUser'))
+    )
+    const q = query(
+        collection(db, 'consultations'),
+        where('patientId', '==', patientId),
+        where('doctor', '==', currentUser.name)
+    )
+    const consultations = (await getDocs(q)).docs.map((item) => ({
+        ...item.data(),
+        id: item.id,
+    }))
+    return consultations
+}
 export async function createPatient(patient) {
     await setDoc(doc(db, 'patients', patient['pt-passport']), patient)
 }
+export async function getInvestigationsAndTemplates() {
+    const investigations = await getDoctorsOrInvestigations('investigations')
+    const templates = (
+        await getDocs(collection(db, 'doctor-templates'))
+    ).docs.map((item) => ({ ...item.data(), id: item.id }))
+    return { investigations, templates }
+}
 
+export async function addConsultationOrTemplate({ mode, name, consultation }) {
+    if (mode === 'template') {
+        await addDoc(collection(db, 'doctor-templates'), {
+            ...consultation,
+            name: name,
+        })
+    } else {
+        await addDoc(collection(db, 'consultations'), consultation)
+    }
+}
 export async function getPaymentsForReport(name, startDate, endDate) {
     const patientsSnapshot = await getDocs(collection(db, 'patients'))
     let filteredPayments = []
@@ -68,7 +118,6 @@ export async function getPaymentsForReport(name, startDate, endDate) {
             'payments'
         )
         let paymentsQuery
-        // Query payments subcollection
         if (name !== 'cashier') {
             paymentsQuery = query(
                 paymentsRef,

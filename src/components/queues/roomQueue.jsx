@@ -1,44 +1,40 @@
-import React, { useEffect, useState } from 'react'
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore'
+import React from 'react'
+import { deleteDoc, doc } from 'firebase/firestore'
 
 import { Link } from 'react-router-dom'
 import { db } from '../../firebaseconfig'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { getRoomQueue } from '../../firestore/firestore'
 
 /* eslint-disable-next-line */
 function RoomQueue({ id }) {
-    const [loading, setLoading] = useState(true)
-    const [patientsInQueue, setpatientsInQueue] = useState([])
-    console.log('Patients in queue', patientsInQueue)
-    async function getRoomQueue(roomId) {
-        console.log('room id', roomId)
-        const querySnapshot = await getDocs(
-            collection(db, 'queues', roomId + '', 'queues')
-        )
+    const { data, isPending, refetch } = useQuery({
+        queryKey: ['roomQueue', id],
+        queryFn: () => getRoomQueue(id),
+    })
 
-        console.log('SNAPSHOT', querySnapshot.docs)
-        setpatientsInQueue(
-            querySnapshot.docs.map((el) => ({ ...el.data(), id: el.id }))
-        )
-        setLoading(false)
-    }
+    const { mutate, isMutationPending } = useMutation({
+        mutationFn: ({ itemId }) =>
+            deleteDoc(doc(db, 'queues', id, 'queues', itemId)),
+        onSuccess: () => {
+            alert("navbat o'chirildi!")
+            refetch()
+        },
+    })
+
     async function handleDelete(itemId) {
-        setLoading(true)
-        await deleteDoc(doc(db, 'queues', id, 'queues', itemId))
-        getRoomQueue(id)
+        mutate({ itemId })
     }
-    useEffect(() => {
-        getRoomQueue(id)
-    }, [id])
 
     const content = (
         <div className="room">
-            {loading ? (
-                'loading...'
+            {isPending || isMutationPending ? (
+                'Yuklanmoqda...'
             ) : (
                 <>
                     <h3 style={{ textAlign: 'center' }}>{id}</h3>
                     <ul>
-                        {patientsInQueue.map((item, index) => (
+                        {data.map((item, index) => (
                             <li className="queue-item" key={item.paymentId}>
                                 <Link
                                     className="queue-pt"
