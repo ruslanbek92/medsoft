@@ -23,7 +23,7 @@ export const ReportComponent = ({ name, type, incomes, expenditures }) => {
         )
     } else if (type === 'revision') {
         const revision = [...incomes, ...expenditures]
-        console.log('revision', revision)
+        // console.log('revision', revision)
         content = (
             <ul>
                 {revision.length === 0 && "Kirim chiqimlar yo'q"}

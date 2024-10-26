@@ -1,50 +1,62 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { deletePayment, getPaymentsById } from '../../firestore/firestore'
-import { useNavigate } from 'react-router-dom'
 import { ModalComponent } from '../modalComponent'
 import { PaymentForm } from '../payments/paymentForm'
 import Cheque from '../payments/cheque'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { queryClient } from '../../main'
 
 /* eslint-disable-next-line */
 const PatientAssign = ({ patientId }) => {
-    const [loading, setLoading] = useState(false)
-    const [payments, setPayments] = useState([])
     const [currentPayment, setCurrentPayment] = useState(null)
     const modalRef = useRef(null)
     const chequeModalRef = useRef(null)
-    const navigate = useNavigate()
-    console.log('curr payment', currentPayment)
+    // console.log('curr payment', currentPayment)
+
+    const { data, isPending, refetch } = useQuery({
+        queryKey: ['payments', patientId],
+        queryFn: () => getPatientPayments(patientId),
+    })
+    const { mutate, isPending: isMutationPending } = useMutation({
+        queryKey: ['payments', patientId],
+        mutationFn: async ({ patientId, paymentId }) => {
+            await deletePayment(patientId, paymentId)
+        },
+        onSuccess: () => {
+            alert("muvaffaqiyatli o'chirildi!")
+            queryClient.invalidateQueries(
+                { queryKey: ['payments', patientId] },
+                { refetchType: 'all' }
+            )
+        },
+    })
+
     async function getPatientPayments(id) {
-        setLoading(true)
         const payments = await getPaymentsById(id)
-        setPayments(payments)
-        setLoading(false)
+        return payments
     }
     async function handlePaymentDelete(patientId, paymentId) {
-        setLoading(true)
-        await deletePayment(patientId, paymentId)
-        navigate(`/main/patients/${patientId}`)
+        mutate({ patientId, paymentId })
     }
-    useEffect(() => {
-        getPatientPayments(patientId)
-    }, [patientId])
 
     function handleAddPayment() {
         modalRef.current.open()
     }
+
     function handlePrintCheque(payment) {
         setCurrentPayment(payment)
         chequeModalRef.current.open()
     }
     return (
         <div className="pt-assign">
-            {loading && 'Loading...'}
-            {!loading && (
+            {isPending && 'Yuklanmoqda...'}
+            {isMutationPending && "O'chirilmoqda..."}
+            {!isPending && !isMutationPending && (
                 <>
                     <h3>To&apos;lovlar</h3>
                     <ul>
                         {/* eslint-disable-next-line */}
-                        {payments.map((el) => (
+                        {data.map((el) => (
                             <li
                                 className={`payment-item ${el.status === 'unpaid' ? 'unpaid' : ''}`}
                                 key={el.id}
@@ -87,6 +99,7 @@ const PatientAssign = ({ patientId }) => {
             </ModalComponent>
             <ModalComponent ref={modalRef}>
                 <PaymentForm
+                    refetchFn={refetch}
                     patientId={patientId}
                     onModalClose={() => modalRef.current.close()}
                 />

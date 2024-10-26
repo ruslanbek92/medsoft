@@ -1,30 +1,34 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Input from '../input'
 import { useParams } from 'react-router-dom'
 import { getPaymentsById } from '../../firestore/firestore'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseconfig'
-import { useFormSubmit } from '../../hooks/useModalFormSubmit'
+
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const CashierForm = ({ onModalClose }) => {
     const { id } = useParams()
-    const [payments, setPayments] = useState([])
     const [currentPayment, setCurrentPayment] = useState(null)
-    const { formLoading, handleSubmit } = useFormSubmit(
-        handleSubmitLogic,
-        onModalClose
-    )
 
-    useEffect(() => {
-        async function fillPaymentSelects() {
-            const payments = await getPaymentsById(id)
-            setPayments(payments.filter((item) => item.status === 'unpaid'))
-        }
-        fillPaymentSelects()
-    }, [])
+    const { data, isPending } = useQuery({
+        queryKey: ['payments', id],
+        queryFn: ({ id }) => getPaymentsById(id),
+    })
+    const { mutate, isPending: isMutationPending } = useMutation({
+        mutationFn: ({ docRef, newPayment }) => updateDoc(docRef, newPayment),
+        onSuccess: () => {
+            alert("to'landi!")
+        },
+    })
+    let payments
+    if (data) {
+        payments = data.filter((item) => item.status === 'unpaid')
+    }
 
-    async function handleSubmitLogic(e) {
+    async function handleSubmit(e) {
+        e.preventDefault()
         let data = Object.fromEntries(new FormData(e.target))
         const paymentObj = {
             ...JSON.parse(data['payment-obj']),
@@ -44,19 +48,22 @@ export const CashierForm = ({ onModalClose }) => {
             'payments',
             data['payment-obj'].id
         )
-        await updateDoc(docRef, {
+        const newPayment = {
             status: 'paid',
             'payment-details': {
                 date: new Date(),
                 type: data['payment-type'],
                 discount: data.discount,
             },
-        })
+        }
+        mutate({ docRef, newPayment })
+        e.target.reset()
+        onModalClose()
     }
 
     return (
         <>
-            {!formLoading && (
+            {!isPending && (
                 <form className="modal-form" onSubmit={handleSubmit}>
                     <h3>To&apos;lov qilish</h3>
                     {currentPayment && (
@@ -110,8 +117,8 @@ export const CashierForm = ({ onModalClose }) => {
                     <button type="submit">to&apos;lash</button>
                 </form>
             )}
-            {formLoading && 'Yuborilmoqda...'}
-            {!formLoading && (
+            {isMutationPending && "To'lanmoqda..."}
+            {!isMutationPending && (
                 <form method="dialog">
                     <button>yopish</button>
                 </form>

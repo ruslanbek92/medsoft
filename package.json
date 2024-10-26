@@ -11,6 +11,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.59.16",
     "firebase": "^10.13.1",
     "firebase-admin": "^12.6.0",
     "firebase-functions": "^6.0.1",
