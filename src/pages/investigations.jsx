@@ -1,9 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { redirect } from 'react-router-dom'
-import { getCurrentUser } from '../firestore/firestore'
+import { getAllTests, getCurrentUser } from '../firestore/firestore'
+import { queryClient } from '../main'
+import { useQuery } from '@tanstack/react-query'
+import { InvestigationsComponent } from '../components/investigations/investigationsComponent'
+import { Filters } from '../components/investigations/filters'
 
 function Investigations() {
-    return <div>Investigations</div>
+    const { data, isPending } = useQuery({
+        queryKey: ['tests'],
+        queryFn: () => getAllTests(),
+    })
+
+    const [filteredData, setFilteredData] = useState(data)
+
+    console.log('data', data)
+    return (
+        <div>
+            <h3>tekshiruvlar</h3>
+            {isPending && 'Yuklanmoqda...'}
+            {!isPending && (
+                <>
+                    <Filters onDataChange={setFilteredData} data={data} />
+                    <InvestigationsComponent investigations={filteredData} />
+                </>
+            )}
+        </div>
+    )
 }
 
 export async function loader() {
@@ -17,7 +40,10 @@ export async function loader() {
         ) {
             return redirect('/')
         } else {
-            return null
+            return queryClient.fetchQuery({
+                queryKey: ['tests'],
+                queryFn: () => getAllTests(),
+            })
         }
     } else return null
 }

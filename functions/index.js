@@ -30,10 +30,15 @@ console.log("patiient ID", params.patientId, "payment id", params.paymentId)
     if (payment.status === "paid" && !payment.isProvided) {
         const collectionName = payment.type === "investigation"?"investigations":payment.type === "consultation"? "doctors":""
         const roomNum = (await getFirestore().collection(collectionName).get()).docs.map(item=>item.data()).find(item=>item.name ===payment.name).room;
-        console.log("number", roomNum)
+        // console.log("number", roomNum)
         const queueRef = getFirestore().collection("queues").doc(roomNum).collection("queues");
         const patient = (await patientRef.get()).data();
         await queueRef.add({patientId:params.patientId,ptName:patient["pt-name"]+patient["pt-surname"], paymentId:params.paymentId, status:"waiting", time:new Date()})
+        if(payment.type==="investigation"){
+            console.log("investigation if")
+            const testsRef = getFirestore().collection('tests');
+            await testsRef.doc(params.paymentId).set({ name:payment.name, ptName:patient["pt-name"]+patient["pt-surname"],patientId:params.patientId, paymentId:params.paymentId, status:"waiting", time:new Date()})
+        }
     }
       
 })

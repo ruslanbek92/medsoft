@@ -86,6 +86,32 @@ export async function getPatientConsultations(patientId) {
     }))
     return consultations
 }
+
+export async function getAllTests() {
+    const querySnapshot = await getDocs(collection(db, 'tests'))
+    if (querySnapshot) {
+        return querySnapshot.docs.map((item) => ({
+            ...item.data(),
+            id: item.id,
+        }))
+    }
+    return []
+}
+export async function getPatientTest(patientId) {
+    const currentUser = await getCurrentUser(
+        JSON.parse(localStorage.getItem('currentUser'))
+    )
+    const q = query(
+        collection(db, 'tests'),
+        where('patientId', '==', patientId),
+        where('investigator', '==', currentUser.name)
+    )
+    const tests = (await getDocs(q)).docs.map((item) => ({
+        ...item.data(),
+        id: item.id,
+    }))
+    return tests.filter((item) => item.status === 'ready')
+}
 export async function createPatient(patient) {
     await setDoc(doc(db, 'patients', patient['pt-passport']), patient)
 }
@@ -167,4 +193,17 @@ export async function getExpendituresForReport(type, startDate, endDate) {
         name: item.data().type,
         type: 'expenditure',
     }))
+}
+export async function getTest(paymentId) {
+    return (await getDoc(doc(db, 'tests', paymentId))).data()
+}
+export async function getInvestigationTemplate(name) {
+    const querySnapShots = await getDocs(collection(db, 'investigations'))
+    const investigation = querySnapShots.docs
+        .map((item) => item.data())
+        .find((item) => item.name === name)
+    if (investigation) {
+        return investigation.template || null
+    }
+    return null
 }

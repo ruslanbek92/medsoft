@@ -39,8 +39,11 @@ a{
 .queue-item,
 .payment-item,
 .pt-recipe,
+.report-row,
 .consultation,
-.income{
+.test,
+.income,
+.investigation-card{
   display: flex;
   align-items: center;
   padding: 5px;
@@ -54,10 +57,12 @@ a{
 .pt-detail,
 .pt-assign,
 .dr-field,
+.investigator-field,
 .modal-form,
 .pt-consultation,
 .recipe,
 .consultations,
+.tests,
 .expenditure-form,
 .reports-form,
 .expenditure{
@@ -77,4 +82,11 @@ a{
 }
 .pt-template{
   background-color: rgb(236, 212, 236);
+}
+
+.waiting{
+  background-color: red;
+}
+.inprogress{
+  background-color: yellow;
 }

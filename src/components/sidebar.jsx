@@ -76,10 +76,16 @@ function Sidebar({ role }) {
                         <Link to="/main/investigations">Tekshiruvlar</Link>
                     </li>
                     <li>
+                        <Link to="/main/patients">Bemorlar</Link>
+                    </li>
+                    <li>
                         <Link to="/main/queue">Navbatlar</Link>
                     </li>
                     <li>
                         <Link to="/main/reports">Hisobotlar</Link>
+                    </li>
+                    <li>
+                        <Link to="/main/templates">Shablonlar</Link>
                     </li>
                 </ul>
             )

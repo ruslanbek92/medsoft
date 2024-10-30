@@ -7,7 +7,7 @@ import PatientAssign from './patientAssign'
 import { ModalComponent } from '../modalComponent'
 import { CashierForm } from '../payments/cashierForm'
 import { getCurrentUser } from '../../firestore/firestore'
-import { DoctorsField } from './doctorsField'
+import { MedicalField } from './medicalField'
 
 function PatientDetails() {
     const { patient, user } = useLoaderData()
@@ -15,6 +15,7 @@ function PatientDetails() {
     function handleOpenModal() {
         dialogRef.current.open()
     }
+    console.log('USER', user)
     return (
         <>
             <div className="pt-detail">
@@ -43,7 +44,9 @@ function PatientDetails() {
                         </ModalComponent>
                     </>
                 )}
-                {user.role === 'doctor' && <DoctorsField />}
+                {(user.role === 'doctor' || user.role === 'investigator') && (
+                    <MedicalField user={user} />
+                )}
             </div>
         </>
     )
