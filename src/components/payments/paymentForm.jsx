@@ -6,6 +6,8 @@ import {
 } from '../../firestore/firestore'
 
 import { useMutation } from '@tanstack/react-query'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '../../firebaseconfig'
 
 export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
     const [firstSelectState, setFirstStateSelect] = useState(null)
@@ -29,17 +31,32 @@ export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
         const data = JSON.parse(
             Object.fromEntries(new FormData(e.target).entries()).service
         )
+        // console.log("data name", data.name)
+        let serviceProvider
+        let type
+        if (firstSelectState === 'investigations') {
+            // console.log("investigations if")
+            type = 'investigation'
+            const investigationsSnapshot = await getDocs(
+                collection(db, 'investigations')
+            )
+            // console.log("investigations array", investigationsSnapshot.docs.map(item=>item.data()))
+            // console.log("type obj",investigationsSnapshot.docs.map(item=>item.data()).find(item=>item.name===data.name))
+            serviceProvider = investigationsSnapshot.docs
+                .map((item) => item.data())
+                .find((item) => item.name === data.name).type
+        } else if (firstSelectState === 'doctors') {
+            type = 'consultation'
+            serviceProvider = data.name
+        }
+        // console.log("service provider", serviceProvider)
         const payment = {
             name: data.name,
             summ: data.price,
             status: 'unpaid',
             date: new Date(),
-            type:
-                firstSelectState === 'investigations'
-                    ? 'investigation'
-                    : firstSelectState === 'doctors'
-                      ? 'consultation'
-                      : '',
+            type,
+            serviceProvider,
             isProvided: false,
         }
         mutate({ payment, patientId })

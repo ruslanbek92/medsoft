@@ -5,8 +5,8 @@ import {
     addConsultationOrTemplate,
     getCurrentUser,
     getInvestigationsAndTemplates,
-} from '../../firestore/firestore'
-import Input from '../input'
+} from '../../../firestore/firestore'
+import Input from '../../input'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const ConsultationForm = ({

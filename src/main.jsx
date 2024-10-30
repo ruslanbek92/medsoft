@@ -37,6 +37,7 @@ import {
     action as reportDetailsAction,
 } from './components/reports/reportDetails'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { loader as templatesLoader, Templates } from './pages/templates'
 
 const router = createBrowserRouter([
     {
@@ -58,6 +59,11 @@ const router = createBrowserRouter([
                         path: 'investigations',
                         element: <Investigations />,
                         loader: investigationsLoader,
+                    },
+                    {
+                        path: 'templates',
+                        element: <Templates />,
+                        loader: templatesLoader,
                     },
                     {
                         path: 'reports',

@@ -9,7 +9,7 @@ function Root() {
     const navigation = useNavigation()
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
-            console.log('onAuthState', user)
+            // console.log('onAuthState', user)
             localStorage.setItem('currentUser', JSON.stringify(user))
         })
     }, [])
