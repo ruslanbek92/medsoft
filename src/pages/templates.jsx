@@ -1,17 +1,61 @@
 import React from 'react'
-import { getCurrentUser } from '../firestore/firestore'
-import { redirect } from 'react-router-dom'
+import { getCurrentUser, getInvestigationsByType } from '../firestore/firestore'
+import { redirect, useLoaderData } from 'react-router-dom'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { InvestigationsComponent } from '../components/templates/investigationsComponent'
+import { TemplatesComponent } from '../components/templates/templatesComponent'
+import { deleteDoc, doc } from 'firebase/firestore'
+import { db } from '../firebaseconfig'
 
 export const Templates = () => {
-    return (
-        <div>
-            <h3>Shablonlar</h3>
-        </div>
-    )
+    const data = useLoaderData()
+    const {
+        data: investigations,
+        isPending,
+        refetch,
+    } = useQuery({
+        queryKey: ['investigations', data.name],
+        queryFn: () => getInvestigationsByType(data.name),
+    })
+    const { mutate, isPending: isMutationPending } = useMutation({
+        mutationKey: ['investigations', data.name],
+        mutationFn: ({ id }) => {
+            deleteDoc(doc(db, 'investigations', id))
+        },
+        onSuccess: () => {
+            refetch()
+            alert("muvaffaqiyatli o'chirildi!")
+        },
+    })
+    function handleInvestigationDelete(id) {
+        mutate({ id })
+    }
+
+    let content
+    if (isPending) content = 'Yuklanmoqda...'
+    if (isMutationPending) content = 'Bajarilmoqda...'
+    if (!isPending && !isMutationPending) {
+        content = (
+            <div>
+                <InvestigationsComponent
+                    investigations={investigations}
+                    user={data}
+                    refetchFn={refetch}
+                    onDelete={handleInvestigationDelete}
+                />
+                <TemplatesComponent
+                    investigations={investigations}
+                    refetchFn={refetch}
+                />
+            </div>
+        )
+    }
+    //   console.log("investigations",investigations)
+    return content
 }
+
 export async function loader() {
     const user = JSON.parse(localStorage.getItem('currentUser'))
-    console.log('user', user)
     if (user) {
         const currentUser = await getCurrentUser(user)
         if (
@@ -21,7 +65,7 @@ export async function loader() {
         ) {
             return redirect('/')
         } else {
-            return null
+            return currentUser
         }
     } else return null
 }

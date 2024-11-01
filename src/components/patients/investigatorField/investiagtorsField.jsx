@@ -34,7 +34,7 @@ export const InvestigatorsField = ({ user, paymentId }) => {
         mutate({ paymentId })
     }
     // console.log("user", user)
-    console.log('data', data)
+    // console.log('data', data)
     return (
         <div className="investigator-field">
             <h3>Tekshiruvchi maydoni</h3>

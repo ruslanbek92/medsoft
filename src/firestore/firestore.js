@@ -207,3 +207,9 @@ export async function getInvestigationTemplate(name) {
     }
     return null
 }
+
+export async function getInvestigationsByType(type) {
+    const q = query(collection(db, 'investigations'), where('type', '==', type))
+    const querySnapshot = await getDocs(q)
+    return querySnapshot.docs.map((item) => ({ ...item.data(), id: item.id }))
+}

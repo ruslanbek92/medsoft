@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useRef } from 'react'
 
-export const MedicalInputRow = ({ onRowChange, rows }) => {
+export const MedicalInputRow = ({ onRowChange, rows, mode }) => {
     const indicationRef = useRef()
     const resultRef = useRef()
     const normRef = useRef()
@@ -28,14 +28,13 @@ export const MedicalInputRow = ({ onRowChange, rows }) => {
     }
 
     function handleAddResult(id, value) {
-        console.log('item', rows[rows.findIndex((item) => item.id === id)])
         rows[rows.findIndex((item) => item.id === id)].result = value
     }
     console.log('rows', rows)
     return (
         <fieldset>
             <legend>Ko&apos;rsatkichlar</legend>
-            {rows.map((item) => (
+            {rows?.map((item) => (
                 <p key={item.id}>
                     {' '}
                     ko&apos;rsatkich nomi:{item.name}
@@ -47,6 +46,7 @@ export const MedicalInputRow = ({ onRowChange, rows }) => {
                                 type="text"
                                 id={item.name}
                                 name={item.name}
+                                disabled={mode === 'template'}
                                 onChange={(e) =>
                                     handleAddResult(item.id, e.target.value)
                                 }
@@ -73,7 +73,12 @@ export const MedicalInputRow = ({ onRowChange, rows }) => {
                     <label htmlFor="result-input">
                         Ko&apos;rsatkich natijasi
                     </label>
-                    <input type="text" id="result-input" ref={resultRef} />
+                    <input
+                        type="text"
+                        id="result-input"
+                        ref={resultRef}
+                        disabled={mode === 'template'}
+                    />
                     <label htmlFor="norm-input">Ko&apos;rsatkich Normasi</label>
                     <input type="text" id="norm-input" ref={normRef} />
                     <button type="submit" onClick={handleAddRow}>
