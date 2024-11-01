@@ -3,8 +3,8 @@ import { redirect } from 'react-router-dom'
 import { getAllTests, getCurrentUser } from '../firestore/firestore'
 import { queryClient } from '../main'
 import { useQuery } from '@tanstack/react-query'
-import { InvestigationsComponent } from '../components/investigations/investigationsComponent'
-import { Filters } from '../components/investigations/filters'
+import { TestsComponent } from '../components/tests/testsComponent'
+import { Filters } from '../components/tests/filters'
 
 function Investigations() {
     const { data, isPending } = useQuery({
@@ -22,7 +22,7 @@ function Investigations() {
             {!isPending && (
                 <>
                     <Filters onDataChange={setFilteredData} data={data} />
-                    <InvestigationsComponent investigations={filteredData} />
+                    <TestsComponent investigations={filteredData} />
                 </>
             )}
         </div>

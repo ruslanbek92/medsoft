@@ -37,10 +37,12 @@ export const InvestigatorForm = ({ investigation, onModalClose }) => {
         console.log()
         mutate({ id: investigation.paymentId, report: report })
     }
+
     function handleCancel() {
         setConclusion('')
         setRows([])
     }
+
     function fillWithTemplate() {
         setConclusion(data.conclusion)
         setRows(data.indicators)

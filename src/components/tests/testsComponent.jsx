@@ -2,7 +2,7 @@ import React from 'react'
 
 /* eslint-disable react/prop-types */
 
-export const InvestigationsComponent = ({ investigations }) => {
+export const TestsComponent = ({ investigations }) => {
     return (
         <ul>
             {investigations.length === 0 && "Tekshiruvlar yo'q"}
