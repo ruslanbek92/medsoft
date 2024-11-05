@@ -1,24 +1,25 @@
-import { Outlet, useNavigation } from 'react-router-dom'
-import React, { useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
+import React, { useContext, useEffect } from 'react'
 import Header from '../components/header'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../firebaseconfig'
+import { AppContext } from '../context'
 
 function Root() {
-    // console.log('Root')
-    const navigation = useNavigation()
+    const context = useContext(AppContext)
+    console.log('Root')
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
-            // console.log('onAuthState', user)
+            console.log('onAuthState', user)
             localStorage.setItem('currentUser', JSON.stringify(user))
+            console.log('auth context', context)
         })
     }, [])
     return (
-        <>
+        <div className="h-full">
             <Header />
-            {navigation.state === 'loading' && 'Yuklanmoqda...'}
-            {navigation.state !== 'loading' && <Outlet />}
-        </>
+            <Outlet />
+        </div>
     )
 }
 

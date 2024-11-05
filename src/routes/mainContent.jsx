@@ -1,18 +1,27 @@
-import { Outlet, redirect, useLoaderData } from 'react-router-dom'
+import {
+    Outlet,
+    redirect,
+    useLoaderData,
+    useNavigation,
+} from 'react-router-dom'
 import Sidebar from '../components/sidebar'
 import { getCurrentUser } from '../firestore/firestore'
 import React from 'react'
 
 function MainContent() {
     // console.log('MainContent')
+    const navigation = useNavigation()
     const role = useLoaderData()
-
     return (
-        <main className="main">
+        <main className="flex">
             {
                 <>
                     <Sidebar role={role} />
-                    {navigation.state === 'loading' && <p>Yuklanmoqda...</p>}
+                    {navigation.state === 'loading' && (
+                        <p className="self-center text-center w-4/5">
+                            Yuklanmoqda...
+                        </p>
+                    )}
                     {navigation.state !== 'loading' && <Outlet />}
                 </>
             }
