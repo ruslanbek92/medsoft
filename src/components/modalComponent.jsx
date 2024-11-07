@@ -19,7 +19,9 @@ export const ModalComponent = forwardRef(function ModalComponent(
     }, [])
 
     return createPortal(
-        <dialog ref={dialog}>{children}</dialog>,
+        <dialog className="p-6 pt-8 rounded-lg" ref={dialog}>
+            {children}
+        </dialog>,
         document.getElementById('modal')
     )
 })

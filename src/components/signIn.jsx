@@ -16,7 +16,7 @@ function SignIn() {
 
         signInWithEmailAndPassword(auth, login, password).then(() => {
             // console.log('sign in')
-            context.setLogged()
+            context.logToggle()
             // navigate("");
             navigate('/main')
         })

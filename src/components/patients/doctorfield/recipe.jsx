@@ -33,45 +33,120 @@ export const Recipe = ({ onRecipeChange, recipes }) => {
                 .map((item) => ({ ...item }))
         )
     }
-    // console.log('recipes', recipes)
     return (
-        <fieldset>
-            <legend>Retseptlar</legend>
-            {recipes.map((item) => (
-                <p className="recipe" key={item.id}>
-                    {item.drug} {item.duration} kun {item.frequency} Mahal,{' '}
-                    {item.complement}{' '}
-                    <button onClick={() => handleDeleteRecipe(item.id)}>
-                        retseptni o&apos;chirsih
-                    </button>
-                </p>
-            ))}
-            <div className="pt-recipe">
-                <div className="pt-recipe" ref={form}>
-                    <label htmlFor="drug-input">Dori nomi</label>
-                    <input type="text" id="drug-input" ref={drugRef} />
-                    <label htmlFor="duration-input">Kun</label>
+        <fieldset className="mt-2 p-2 border">
+            <legend className="block font-semibold text-gray-900">
+                Retseptlar
+            </legend>
+            {!!recipes.length && (
+                <table className="mb-2 table-auto w-full text-left border ">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-6 py-3" scope="col">
+                                Dori nomi
+                            </th>
+                            <th className="px-6 py-3" scope="col">
+                                davomiyligi(kun)
+                            </th>
+                            <th className="px-6 py-3" scope="col">
+                                Chastotasi(mahal)
+                            </th>
+                            <th className="px-6 py-3" scope="col">
+                                Izoh
+                            </th>
+                            <th className="px-6 py-3" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {recipes.map((item) => (
+                            <tr key={item.id} className="p-3 mb-2 border-b">
+                                <td className="px-6 py-3">{item.drug}</td>
+                                <td className="px-6 py-3">{item.duration}</td>
+                                <td className="px-6 py-3">{item.frequency}</td>
+                                <td className="px-6 py-3">{item.complement}</td>
+                                <td className="px-6 py-3">
+                                    <button
+                                        className="mt-4 flex justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        onClick={() =>
+                                            handleDeleteRecipe(item.id)
+                                        }
+                                    >
+                                        retseptni o&apos;chirsih
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+
+            <div
+                className="flex justify-between items-center p-2 border rounded"
+                ref={form}
+            >
+                <div>
+                    <label
+                        htmlFor="drug-input"
+                        className=" text-sm/6 font-medium text-gray-900"
+                    >
+                        Dori nomi
+                    </label>
+                    <input
+                        type="text"
+                        id="drug-input"
+                        className="ml-1 p-1 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                        ref={drugRef}
+                    />
+                </div>
+                <div>
+                    <label
+                        htmlFor="duration-input"
+                        className=" text-sm/6 font-medium text-gray-900"
+                    >
+                        Kun
+                    </label>
                     <input
                         type="number"
                         id="duration-input"
+                        className="ml-1 p-1 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                         ref={durationRef}
                     />
-                    <label htmlFor="frequency-input">Mahal</label>
+                </div>
+                <div>
+                    <label
+                        htmlFor="frequency-input"
+                        className=" text-sm/6 font-medium text-gray-900"
+                    >
+                        Mahal
+                    </label>
                     <input
                         type="number"
                         id="frequency-input"
+                        className="ml-1 p-1 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                         ref={frequencyRef}
                     />
-                    <label htmlFor="complement-input">Izoh</label>
+                </div>
+                <div>
+                    <label
+                        htmlFor="complement-input"
+                        className=" text-sm/6 font-medium text-gray-900"
+                    >
+                        Izoh
+                    </label>
                     <input
                         type="text"
                         id="complement-input"
+                        className="ml-1 p-1 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                         ref={complementRef}
                     />
-                    <button type="submit" onClick={handleAddRecipe}>
-                        Retsept qo&apos;shish
-                    </button>
                 </div>
+                <button
+                    type="submit"
+                    className="flex  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={handleAddRecipe}
+                >
+                    Retsept qo&apos;shish
+                </button>
             </div>
         </fieldset>
     )

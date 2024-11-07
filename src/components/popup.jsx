@@ -11,7 +11,7 @@ export const Popup = ({ onStateChange }) => {
     function handleQuit() {
         auth.signOut().then(() => {
             onStateChange((state) => !state)
-            content.setLogged()
+            content.logToggle()
             navigate('/')
         })
     }

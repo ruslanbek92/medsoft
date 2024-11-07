@@ -15,9 +15,9 @@ function Header() {
         queryFn: () => getCurrentUser(user),
     })
     console.log('user', context.isLogged)
-    console.log('Header')
+    console.log('Header data', data)
     return (
-        <header className="p-4  flex h-18 items-center justify-between bg-cyan-600">
+        <header className="p-4 flex h-18 items-center justify-between bg-indigo-600">
             <Hamburger />
             <h1 className="text-3xl text-white font-bold">
                 <Link to={'/main'}>Medsoft</Link>
@@ -27,7 +27,7 @@ function Header() {
                     {!isPending && (
                         <div>
                             <img
-                                className="mb-2 border-2 border-slate-800 rounded-full cursor-pointer "
+                                className="mb-2 border-2 border-white rounded-full cursor-pointer "
                                 src=""
                                 width="30"
                                 height="30"

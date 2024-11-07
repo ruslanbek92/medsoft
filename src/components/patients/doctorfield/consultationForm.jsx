@@ -20,13 +20,10 @@ export const ConsultationForm = ({
     const [diagnosis, setDiagnosis] = useState('')
     const [selectedInvestigations, setSelectedInvestigations] = useState([])
 
-    // console.log("mode", mode)
-
     const { data, isPending, refetch } = useQuery({
         queryKey: ['templates', 'investigations'],
         queryFn: getInvestigationsAndTemplates,
     })
-    //  console.log("data react query", data)
 
     const { mutate, isPending: isMutationPending } = useMutation({
         queryKey: ['templates', 'consultations'],
@@ -73,13 +70,21 @@ export const ConsultationForm = ({
         setSelectedInvestigations(selectedOptions)
     }
     function handleSelectChange(e) {
-        const currTemplate = data.templates.find(
-            (item) => item.name === e.target.value
-        )
-        setComplaints(currTemplate.complaints)
-        setDiagnosis(currTemplate.diagnosis)
-        setSelectedInvestigations(currTemplate.investigations)
-        setRecipes(currTemplate.recipes)
+        console.log('VALUE', e.target.value)
+        if (!e.target.value) {
+            setComplaints('')
+            setDiagnosis('')
+            setSelectedInvestigations('')
+            setRecipes('')
+        } else {
+            const currTemplate = data.templates.find(
+                (item) => item.name === e.target.value
+            )
+            setComplaints(currTemplate.complaints)
+            setDiagnosis(currTemplate.diagnosis)
+            setSelectedInvestigations(currTemplate.investigations)
+            setRecipes(currTemplate.recipes)
+        }
     }
     function handleAddTemplate() {
         setComplaints('')
@@ -99,30 +104,35 @@ export const ConsultationForm = ({
 
     return (
         <div
-            className={`"pt-consultation" ${mode === 'registration' ? '' : 'pt-template'}`}
+            className={`p-4 mt-4 border rounded-md border-gray-400 shadow-md ${mode === 'registration' ? '' : 'pt-template'}`}
         >
-            <h3>
+            <h3 className="font-bold mb-3 text-lg">
                 {mode === 'registration'
                     ? "Tibbiy ko'rik formasi"
-                    : 'shablon formasi'}
+                    : "Shablon qo'shish formasi"}
             </h3>
             {isPending && 'Yuklanmoqda...'}
             {isMutationPending && 'Jonatilmoqda...'}
             {!isPending && !isMutationPending && !isMutationPending && (
                 <>
                     {mode === 'registration' && (
-                        <button onClick={handleAddTemplate}>
+                        <button
+                            className=" flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            onClick={handleAddTemplate}
+                        >
                             Shablon qo&apos;shish
                         </button>
                     )}
                     {mode === 'registration' && (
-                        <form>
+                        <form className="mt-4">
                             <label htmlFor="templates">Shablon tanlash</label>
                             <select
+                                className="rounded border px-1  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                                 name="templates"
                                 id="templates"
                                 onChange={(e) => handleSelectChange(e)}
                             >
+                                <option value="">-Tanlang-</option>
                                 {data?.templates.map((item) => (
                                     <option key={item.id}>{item.name}</option>
                                 ))}
@@ -130,25 +140,44 @@ export const ConsultationForm = ({
                         </form>
                     )}
                     <form onSubmit={handleSubmit}>
-                        <label htmlFor="complaints">Shikoyatlari</label>
+                        {mode === 'template' && (
+                            <Input
+                                type="text"
+                                name="template-name"
+                                id="template-name"
+                                label="Shablon nomi"
+                                required={true}
+                            />
+                        )}
+                        <label
+                            htmlFor="complaints"
+                            className="block  font-semibold text-gray-900"
+                        >
+                            Shikoyatlari
+                        </label>
                         <textarea
                             id="complaints"
                             name="complaints"
+                            className="my-2 p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 resize-none"
                             value={complaints}
                             onChange={(e) => setComplaints(e.target.value)}
                         ></textarea>
-                        <label>Tashxisi</label>
+                        <label className="block  font-semibold text-gray-900">
+                            Tashxisi
+                        </label>
                         <textarea
                             name="diagnosis"
+                            className="my-2 p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 resize-none"
                             value={diagnosis}
                             onChange={(e) => setDiagnosis(e.target.value)}
                         ></textarea>
                         <fieldset>
-                            <legend>
+                            <legend className="block  font-semibold text-gray-900">
                                 Qilinishi kerak bo&apos;lgan tekshiruvlar
                             </legend>
                             <select
                                 id="investigations"
+                                className="my-2 p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                 value={selectedInvestigations}
                                 onChange={handleInvestigationChange}
                                 multiple
@@ -162,15 +191,6 @@ export const ConsultationForm = ({
                         </fieldset>
                         <Recipe onRecipeChange={setRecipes} recipes={recipes} />
 
-                        {mode === 'template' && (
-                            <Input
-                                type="text"
-                                name="template-name"
-                                id="template-name"
-                                label="template-name"
-                                required={true}
-                            />
-                        )}
                         {!!(
                             complaints ||
                             diagnosis ||
@@ -178,14 +198,29 @@ export const ConsultationForm = ({
                             recipes.length
                         ) &&
                             mode === 'registration' && (
-                                <button onClick={handleCancel}>
+                                <button
+                                    className="border border-gray-500 rounded-md px-3 py-1.5 text-sm/6 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={handleCancel}
+                                >
                                     bekor qilish
                                 </button>
                             )}
-                        {mode === 'template' && (
-                            <button onClick={handleCancel}>bekor qilish</button>
-                        )}
-                        <button type="submit">saqlash</button>
+                        <div className="flex gap-2 justify-end">
+                            {mode === 'template' && (
+                                <button
+                                    className="border border-gray-500 rounded-md px-3 py-1.5 text-sm/6 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={handleCancel}
+                                >
+                                    bekor qilish
+                                </button>
+                            )}
+                            <button
+                                className="flex  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                type="submit"
+                            >
+                                saqlash
+                            </button>
+                        </div>
                     </form>
                 </>
             )}

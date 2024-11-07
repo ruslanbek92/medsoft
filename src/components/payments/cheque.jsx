@@ -12,26 +12,77 @@ const Cheque = ({ payment, onModalClose }) => {
         payment && (
             <>
                 <div ref={contentRef}>
-                    <h3>Chek</h3>
-                    <p>Nomi: {payment.name}</p>
-                    <p>Id: {payment.id}</p>
-                    <p>
-                        to&apos;lov yaratilgan sana : {payment.date.toString()}
-                    </p>
-                    <p>
-                        to&apos;lov qilingan sana :{' '}
-                        {payment['payment-details'].date.toString()}
-                    </p>
-                    <p>summa: {payment.summ}</p>
-                    <p>chegirma: {payment['payment-details'].discount}</p>
-                    <p>
-                        yakuniy to&apos;lov:{' '}
-                        {payment.summ - payment['payment-details'].discount}
-                    </p>
-                    <p>to&apos;lov turi: {payment['payment-details'].type} </p>
+                    <h3 className="font-bold mb-2">Chek chiqarish</h3>
+                    <div className="border rounded px-2">
+                        <div className="flex border-b py-2">
+                            <p className="font-semibold w-36">Xizmat nomi:</p>
+                            <p className="font-semibold text-slate-600">
+                                {payment.name}
+                            </p>
+                        </div>
+                        <div className="flex border-b py-2">
+                            <p className="font-semibold w-36">
+                                To&apos;lov Idsi:
+                            </p>
+                            <p className="font-semibold text-slate-600">
+                                {payment.id}
+                            </p>
+                        </div>
+
+                        <div className="flex border-b py-2">
+                            <p className="font-semibold w-36">
+                                to&apos;lov qilingan sana :
+                            </p>
+                            <p className="font-semibold text-slate-600">
+                                {payment['payment-details'].date.toString()}
+                                {payment['payment-details'].date.toString()}
+                            </p>
+                        </div>
+                        <div className="flex border-b py-2">
+                            <p className="font-semibold w-36">summa:</p>
+                            <p className="font-semibold text-slate-600">
+                                {payment.summ} so&apos;m
+                            </p>
+                        </div>
+                        <div className="flex border-b py-2">
+                            <p className="font-semibold w-36">chegirma:</p>
+                            <p className="font-semibold text-slate-600">
+                                {payment['payment-details'].discount}
+                            </p>
+                        </div>
+                        <div className="flex border-b py-2">
+                            <p className="font-semibold w-36">
+                                to&apos;lov turi:
+                            </p>
+                            <p className="font-semibold text-slate-600">
+                                {payment['payment-details'].type === 'cash'
+                                    ? 'naqd'
+                                    : 'plastik'}
+                            </p>
+                        </div>
+                        <div className="flex border-b py-2">
+                            <p className="font-semibold w-36">
+                                yakuniy to&apos;lov:
+                            </p>
+                            <p className="font-semibold text-slate-600">
+                                {payment.summ -
+                                    payment['payment-details'].discount}
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <button onClick={handlePrint}>chop etish</button>
-                <button onClick={onModalClose}>yopish</button>
+                <button
+                    className="my-4 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={handlePrint}
+                >
+                    chop etish
+                </button>
+                <button
+                    className="mt-4 flex justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={onModalClose}
+                >
+                    yopish
+                </button>
             </>
         )
     )

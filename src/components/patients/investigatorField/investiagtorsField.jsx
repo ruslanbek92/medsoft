@@ -33,33 +33,51 @@ export const InvestigatorsField = ({ user, paymentId }) => {
     function handleStartInvestigation() {
         mutate({ paymentId })
     }
-    // console.log("user", user)
-    // console.log('data', data)
     return (
-        <div className="investigator-field">
-            <h3>Tekshiruvchi maydoni</h3>
+        <div className="p-4 mt-4 border rounded-md border-gray-400 shadow-md">
+            <h3 className="font-bold mb-3 text-lg">Tekshiruvchi maydoni</h3>
             {isPending && 'Yuklanmoqda...'}
             {isMutationPending && "Jo'natilmoqda..."}
             {!isPending && !isMutationPending && (
-                <div className="investigation-card">
-                    <p>Nomi: {data.name}</p>
-                    <p>Idsi: {data.paymentId}</p>
-                    <p>
-                        maqomi:{' '}
+                <div className="">
+                    <div className="flex border-b py-2">
+                        <p className="font-semibold w-36">Nomi:</p>
+                        <p className="font-semibold text-slate-600">
+                            {data.name}
+                        </p>
+                    </div>
+                    <div className="flex border-b py-2">
+                        <p className="font-semibold w-36">Idsi:</p>
+                        <p className="font-semibold text-slate-600">
+                            {data.paymentId}
+                        </p>
+                    </div>
+                    <div className="flex border-b py-2">
+                        <p className="font-semibold w-36">Maqomi:</p>
+                        <p className="font-semibold text-slate-600">
+                            {data.status === 'waiting'
+                                ? 'amalga oshirilmagan'
+                                : data.status === 'inprogress'
+                                  ? 'natija kutilmoqda'
+                                  : 'tayyor'}
+                        </p>
+                    </div>
+                    <button
+                        className="my-4 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={
+                            data.status === 'waiting'
+                                ? handleStartInvestigation
+                                : data.status === 'inprogress'
+                                  ? handleOpenModal
+                                  : null
+                        }
+                    >
                         {data.status === 'waiting'
-                            ? 'amalga oshirilmagan'
+                            ? 'amalga oshirish'
                             : data.status === 'inprogress'
-                              ? 'natija kutilmoqda'
-                              : 'tayyor'}
-                    </p>
-                    {data.status === 'waiting' && (
-                        <button onClick={handleStartInvestigation}>
-                            amalga oshirish
-                        </button>
-                    )}
-                    {data.status === 'inprogress' && (
-                        <button onClick={handleOpenModal}>tayyor qilish</button>
-                    )}
+                              ? 'tayyor qilish'
+                              : ''}
+                    </button>
                 </div>
             )}
             <ModalComponent ref={dialogRef}>

@@ -31,17 +31,13 @@ export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
         const data = JSON.parse(
             Object.fromEntries(new FormData(e.target).entries()).service
         )
-        // console.log("data name", data.name)
         let serviceProvider
         let type
         if (firstSelectState === 'investigations') {
-            // console.log("investigations if")
             type = 'investigation'
             const investigationsSnapshot = await getDocs(
                 collection(db, 'investigations')
             )
-            // console.log("investigations array", investigationsSnapshot.docs.map(item=>item.data()))
-            // console.log("type obj",investigationsSnapshot.docs.map(item=>item.data()).find(item=>item.name===data.name))
             serviceProvider = investigationsSnapshot.docs
                 .map((item) => item.data())
                 .find((item) => item.name === data.name).type
@@ -49,7 +45,6 @@ export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
             type = 'consultation'
             serviceProvider = data.name
         }
-        // console.log("service provider", serviceProvider)
         const payment = {
             name: data.name,
             summ: data.price,
@@ -70,18 +65,21 @@ export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
             {!isPending && (
                 <form
                     method="post"
-                    className="modal-form"
+                    className="rounded border p-2 "
                     onSubmit={handleSubmit}
                 >
-                    <fieldset>
-                        <legend>Xizmat turi:</legend>
-                        {/* eslint-disable-next-line */}
+                    <fieldset className="rounded p-2 mb-4">
+                        <legend className="font-semibold">
+                            Xizmat turini tanlang:
+                        </legend>
                         <label htmlFor="service"></label>
                         <select
                             id="type"
+                            className="rounded border px-1  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                             onChange={handleSelectChange}
                             required
                         >
+                            <option value="">tanlang</option>
                             <option value="doctors">
                                 Shifokor Konsultatsiyasi
                             </option>
@@ -90,13 +88,23 @@ export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
                     </fieldset>
 
                     {firstSelectState && (
-                        <fieldset>
-                            <legend>{firstSelectState}</legend>
-                            {/* eslint-disable-next-line */}
+                        <fieldset className=" rounded p-2">
+                            <legend className="font-semibold">
+                                {firstSelectState === 'investigations'
+                                    ? 'Tekshiruv'
+                                    : 'Shifokor'}
+                                ni tanlang
+                            </legend>
                             <label htmlFor={firstSelectState}></label>
                             {!secondSelectState && <p>Loading...</p>}
                             {secondSelectState && (
-                                <select name="service" id={firstSelectState}>
+                                <select
+                                    className="rounded border px-1  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                                    name="service"
+                                    id={firstSelectState}
+                                    required
+                                >
+                                    <option value="">tanlang</option>
                                     {secondSelectState.map((item) => (
                                         <option
                                             key={item.name}
@@ -110,12 +118,23 @@ export const PaymentForm = ({ patientId, refetchFn, onModalClose }) => {
                             )}
                         </fieldset>
                     )}
-                    <button type="submit">yuborish</button>
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            className=" mt-4 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                            yuborish
+                        </button>
+                    </div>
                 </form>
             )}
             {!isPending && (
                 <form method="dialog">
-                    <button type="button" onClick={onModalClose}>
+                    <button
+                        type="button"
+                        className="mt-4 flex justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={onModalClose}
+                    >
                         yopish
                     </button>
                 </form>

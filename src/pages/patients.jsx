@@ -16,15 +16,20 @@ function Patients() {
     const patientsData = useLoaderData()
     // console.log('patients', patientsData)
     return (
-        <ul>
-            {patientsData.map((el) => (
-                <li key={el['pt-passport']}>
-                    <Link to={`${el['pt-passport']}`}>
-                        <PatientCard patient={el} />
-                    </Link>
-                </li>
-            ))}
-        </ul>
+        <div className="p-4 pt-8 w-full md:w-4/5">
+            <h2 className="text-2xl pl-2 pb-4 mb-4 font-bold border-b border-b-gray-400 shadow-md">
+                Bemorlar
+            </h2>
+            <ul className="md:w-2/3 ">
+                {patientsData.map((el) => (
+                    <li key={el['pt-passport']}>
+                        <Link to={`${el['pt-passport']}`}>
+                            <PatientCard patient={el} />
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </div>
     )
 }
 async function getPatients(user) {
