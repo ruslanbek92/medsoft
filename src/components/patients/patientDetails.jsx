@@ -1,54 +1,16 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { doc, getDoc } from 'firebase/firestore'
-
 import { useLoaderData } from 'react-router-dom'
 import { db } from '../../firebaseconfig'
-import PatientAssign from './patientAssign'
-import { ModalComponent } from '../modalComponent'
-import { CashierForm } from '../payments/cashierForm'
 import { getCurrentUser } from '../../firestore/firestore'
-import { MedicalField } from './medicalField'
+import { PatientTab } from './PatientTab'
 
 function PatientDetails() {
     const { patient, user } = useLoaderData()
-    const dialogRef = useRef()
-    function handleOpenModal() {
-        dialogRef.current.open()
-    }
-    console.log('USER', user)
     return (
-        <>
-            <div className="pt-detail">
-                <p>Bemor ismi: {patient['pt-name']}</p>
-                <p>Bemor Familyasi: {patient['pt-surname']}</p>
-                <p>Royxatdan otgan sanasi: {patient.dor}</p>
-                <p>Tugilgan sanasi: {patient['pt-dob']}</p>
-                <p>Qabul turi: {patient['pt-type']}</p>
-                <p>Bemor identifikatsion raqami: {patient['pt-passport']}</p>
-                <p>Bemor manzili: {patient['pt-address']}</p>
-                {user.role !== 'doctor' && (
-                    <PatientAssign patientId={patient.id} />
-                )}
-                {user.role === 'cashier' && (
-                    <>
-                        <div className="pt-detail">
-                            <button onClick={handleOpenModal}>
-                                To&apos;lov qilish
-                            </button>
-                            <p>Qarzdorlik:{patient.debtAmount}</p>
-                        </div>
-                        <ModalComponent ref={dialogRef}>
-                            <CashierForm
-                                onModalClose={() => dialogRef.current.close()}
-                            />
-                        </ModalComponent>
-                    </>
-                )}
-                {(user.role === 'doctor' || user.role === 'investigator') && (
-                    <MedicalField user={user} />
-                )}
-            </div>
-        </>
+        <div className=" p-4 pt-8 w-full md:w-4/5">
+            <PatientTab patient={patient} user={user} />
+        </div>
     )
 }
 

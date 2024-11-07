@@ -9,7 +9,7 @@ import { getCurrentUser } from '../firestore/firestore'
 import React from 'react'
 
 function MainContent() {
-    // console.log('MainContent')
+    console.log('MainContent')
     const navigation = useNavigation()
     const role = useLoaderData()
     return (

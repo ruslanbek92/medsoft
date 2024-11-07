@@ -3,10 +3,7 @@ import React from 'react'
 const Input = ({ type, id, name, label, value, required, ...props }) => {
     return (
         <div>
-            <label
-                className="block text-sm/6 font-medium text-gray-900"
-                htmlFor={id}
-            >
+            <label className="block  font-semibold text-gray-900" htmlFor={id}>
                 {label}
             </label>
             {/* eslint-disable-next-line */}

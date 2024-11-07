@@ -12,10 +12,10 @@ function Registration() {
             "Jo'natilmoqda"
         ) : (
             <div className="p-4 pt-8 w-full md:w-4/5">
-                <h2 className="text-2xl pb-4 mb-4 font-bold border-b border-b-gray-500">
+                <h2 className="text-2xl pl-2 pb-4 mb-4 font-bold border-b border-b-gray-400 shadow-md">
                     Registratsiya
                 </h2>
-                <Form method="post" className="md:w-1/2 ">
+                <Form method="post" className="md:w-2/3">
                     <Input
                         type="text"
                         id="name"

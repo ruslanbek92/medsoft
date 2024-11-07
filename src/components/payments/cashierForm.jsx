@@ -64,63 +64,97 @@ export const CashierForm = ({ onModalClose }) => {
     return (
         <>
             {!isPending && (
-                <form className="modal-form" onSubmit={handleSubmit}>
-                    <h3>To&apos;lov qilish</h3>
+                <form className="rounded border p-2 " onSubmit={handleSubmit}>
                     {currentPayment && (
-                        <p>to&apos;lov summasi:{currentPayment.summ}</p>
+                        <div className="p-2  flex  border-b">
+                            <p className="w-36  font-semibold text-gray-900">
+                                To&apos;lov summasi:
+                            </p>
+                            <p className=" font-semibold  text-gray-900">
+                                {currentPayment.summ}
+                            </p>
+                        </div>
                     )}
-                    <label htmlFor="payment-select">to&apos;lov nomi</label>
-                    <select
-                        id="payment-select"
-                        name="payment-obj"
-                        onChange={(e) =>
-                            setCurrentPayment(JSON.parse(e.target.value))
-                        }
-                        required
-                    >
-                        {payments &&
-                            payments.map((item) => (
-                                <option
-                                    key={item.id}
-                                    value={JSON.stringify(item)}
-                                >
-                                    {item.name}
-                                </option>
-                            ))}
-                    </select>
+                    <div className="p-2 flex  border-b items-center">
+                        <label
+                            className="w-36 font-semibold text-gray-900"
+                            htmlFor="payment-select"
+                        >
+                            To&apos;lov nomi
+                        </label>
+                        <select
+                            id="payment-select"
+                            name="payment-obj"
+                            className="my-2 p-1  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                            onChange={(e) =>
+                                setCurrentPayment(JSON.parse(e.target.value))
+                            }
+                            required
+                        >
+                            <option value="">Tanlang</option>
+                            {payments &&
+                                payments.map((item) => (
+                                    <option
+                                        key={item.id}
+                                        value={JSON.stringify(item)}
+                                    >
+                                        {item.name}
+                                    </option>
+                                ))}
+                        </select>
+                    </div>
 
-                    <fieldset>
-                        <legend>to&apos;lov turi</legend>
-                        <label htmlFor="cash">Naqd</label>
-                        <input
-                            type="radio"
-                            id="cash"
-                            name="payment-type"
-                            value="cash"
-                            required
-                        />
-                        <label htmlFor="cash">Plastik</label>
-                        <input
-                            type="radio"
-                            id="card"
-                            name="payment-type"
-                            value="card"
-                            required
-                        />
-                    </fieldset>
+                    <div className="flex border-b p-2">
+                        <legend className="w-36 font-semibold py-2">
+                            To&apos;lov turi
+                        </legend>
+                        <div>
+                            <div>
+                                <input
+                                    type="radio"
+                                    id="cash"
+                                    name="payment-type"
+                                    value="cash"
+                                    required
+                                />
+                                <label className="ml-2" htmlFor="cash">
+                                    Naqd
+                                </label>
+                            </div>
+                            <div>
+                                <input
+                                    type="radio"
+                                    id="card"
+                                    name="payment-type"
+                                    value="card"
+                                    required
+                                />
+                                <label className="ml-2" htmlFor="cash">
+                                    Plastik
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     <Input
                         type="number"
                         id="discount"
                         name="discount"
                         label="Chegirma summasi(agar bo'lsa)"
                     />
-                    <button type="submit">to&apos;lash</button>
+                    <button
+                        className=" mt-4 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        type="submit"
+                    >
+                        to&apos;lash
+                    </button>
                 </form>
             )}
             {isMutationPending && "To'lanmoqda..."}
             {!isMutationPending && (
                 <form method="dialog">
-                    <button>yopish</button>
+                    <button className="mt-4 flex justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        yopish
+                    </button>
                 </form>
             )}
         </>
