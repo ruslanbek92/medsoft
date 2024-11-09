@@ -15,7 +15,7 @@ function Sidebar({ role }) {
                 <ul className="flex-1 px-3">
                     <li>
                         <NavLink
-                            className="border border-indigo-600 block rounded  p-2 my-2 hover:bg-cyan-900 "
+                            className="border border-indigo-600 block rounded  p-2 px-4 my-2 hover:border-white"
                             to="/main/registration"
                         >
                             Registratsiya

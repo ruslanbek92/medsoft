@@ -5,17 +5,6 @@ import { db } from '../../firebaseconfig'
 
 /* eslint-disable react/prop-types */
 export const Filters = ({ onDataChange, data }) => {
-    const { data: investigators, isPending: isInvestigatorsPending } = useQuery(
-        {
-            queryKey: ['investigators'],
-            queryFn: async () => {
-                return (
-                    await getDocs(collection(db, 'investigators'))
-                ).docs.map((item) => ({ ...item.data(), id: item.id }))
-            },
-        }
-    )
-
     const { data: investigations, isPending: isInvestigationsPending } =
         useQuery({
             queryKey: ['investigations'],
@@ -35,12 +24,23 @@ export const Filters = ({ onDataChange, data }) => {
                 formData[key] = roughData[key]
             }
         }
-
+        console.log('form Data', formData)
         let filteredData = data
         for (const key in formData) {
-            if (key === 'acceptance-date') {
+            if (key === 'acceptance-date' || key === 'preparation-date') {
                 filteredData = filteredData.filter((item) => {
-                    if (item.report) return item.report[key] === formData[key]
+                    if (item.report) {
+                        const formDate = new Date(formData[key]).setHours(
+                            0,
+                            0,
+                            0,
+                            0
+                        )
+                        const itemDate = item.report[key]
+                            .toDate()
+                            .setHours(0, 0, 0, 0)
+                        return itemDate === formDate
+                    }
                     return false
                 })
             } else {
@@ -49,6 +49,7 @@ export const Filters = ({ onDataChange, data }) => {
                 )
             }
         }
+        console.log('filteredData', filteredData)
         onDataChange(filteredData)
     }
     return (
@@ -56,31 +57,7 @@ export const Filters = ({ onDataChange, data }) => {
             <h4 className="font-semibold text-2xl mb-2">Filtrlar</h4>
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-between">
-                    {isInvestigatorsPending && 'Tekshiruvchilar yuklanmoqda...'}
                     {isInvestigationsPending && 'Tekshiruvlar yuklanmoqda...'}
-
-                    {!isInvestigatorsPending && (
-                        <div>
-                            <label
-                                htmlFor="investigation"
-                                className="font-medium mr-2 text-gray-900"
-                            >
-                                Tekshiruvchi nomi
-                            </label>
-                            <select
-                                name="investigator"
-                                id="investigator"
-                                className="rounded-md border p-2    ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                            >
-                                <option value="">Tanlang</option>
-                                {investigators.map((item) => (
-                                    <option key={item.id} value={item.name}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
                     {!isInvestigationsPending && (
                         <div>
                             <label
@@ -113,7 +90,22 @@ export const Filters = ({ onDataChange, data }) => {
                         <input
                             className="p-1  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                             type="date"
+                            name="acceptance-date"
                             id="acceptance-date"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            className="mr-2 font-medium text-gray-900"
+                            htmlFor="preparation-date"
+                        >
+                            Tayyorlangan sanasi
+                        </label>
+                        <input
+                            className="p-1  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                            type="date"
+                            name="preparation-date"
+                            id="preparation-date"
                         />
                     </div>
                     <div>

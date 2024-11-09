@@ -14,7 +14,7 @@ function Investigations() {
 
     const [filteredData, setFilteredData] = useState(data)
 
-    console.log('data', data)
+    console.log('PAGE')
     return (
         <div className="p-4 pt-8 w-full md:w-4/5">
             <h2 className="text-2xl pl-2 pb-4 mb-4 font-bold border-b border-b-gray-400 shadow-md">

@@ -15,6 +15,7 @@ export const InvestigationsComponent = ({
     const [currentInvestigation, setCurrentInvestigation] = useState({
         name: '',
         price: '',
+        format: '',
     })
     const [formMode, setFormMode] = useState('')
     const dialogRef = useRef()
@@ -59,6 +60,7 @@ export const InvestigationsComponent = ({
                 newInvestigation: {
                     name: currentInvestigation.name,
                     price: +currentInvestigation.price,
+                    format: currentInvestigation.format,
                     type: user.name,
                 },
             })
@@ -121,6 +123,26 @@ export const InvestigationsComponent = ({
                                 }
                                 required={true}
                             />
+
+                            <label htmlFor="format">Natija formati</label>
+                            <select
+                                id="format"
+                                name="format"
+                                value={currentInvestigation.format}
+                                onChange={(e) =>
+                                    setCurrentInvestigation(
+                                        (investigation) => ({
+                                            ...investigation,
+                                            format: e.target.value,
+                                        })
+                                    )
+                                }
+                                required
+                            >
+                                <option value="">tanlang</option>
+                                <option value="text">Matn</option>
+                                <option value="table">Jadval</option>
+                            </select>
                             <button type="submit">saqlash</button>
                         </form>
                         <button onClick={() => dialogRef.current.close()}>

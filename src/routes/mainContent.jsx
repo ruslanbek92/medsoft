@@ -31,7 +31,6 @@ function MainContent() {
 
 export async function loader() {
     const user = JSON.parse(localStorage.getItem('currentUser'))
-    console.log('loader user', user)
     if (user) {
         const currentUser = await getCurrentUser(user)
         return currentUser.role

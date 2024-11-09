@@ -36,10 +36,10 @@ export const MedicalHistory = ({ type }) => {
         dialogRef.current.open()
     }
     return (
-        <>
+        <div className="p-4">
             {isPending && 'Yuklanmoqda...'}
             {!isPending && (
-                <div className="p-4">
+                <div>
                     <h3 className="font-bold mb-3 text-lg">
                         {`${type === 'doctor' ? "Ko'rik qaydlari" : type === 'investigator' ? 'Tekshiruvlar' : ''}`}{' '}
                     </h3>
@@ -101,6 +101,6 @@ export const MedicalHistory = ({ type }) => {
                     </ModalComponent>
                 </div>
             )}
-        </>
+        </div>
     )
 }
