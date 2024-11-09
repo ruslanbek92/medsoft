@@ -58,7 +58,7 @@ const QueueControl = ({ user }) => {
         content = (
             <>
                 <button
-                    className="flex  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className=" m-auto flex  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     onClick={() =>
                         mutate({
                             command:
@@ -71,9 +71,9 @@ const QueueControl = ({ user }) => {
                     }
                 >
                     {queue.status === 'waiting'
-                        ? 'qabulni boshlash'
+                        ? 'Qabulni boshlash'
                         : queue.status === 'inprogress'
-                          ? 'qabulni yakunlash'
+                          ? 'Qabulni yakunlash'
                           : ''}
                 </button>
                 {queue.status === 'inprogress' && (

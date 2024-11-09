@@ -10,8 +10,7 @@ import { CashierForm } from '../../components/payments/cashierForm'
 /* eslint-disable-next-line */
 const PatientPayments = ({ user, patient }) => {
     const [currentPayment, setCurrentPayment] = useState(null)
-    const modalRef = useRef(null)
-    const chequeModalRef = useRef(null)
+    const [modalMode, setModalMode] = useState('')
     const dialogRef = useRef()
 
     const { data, isPending, refetch } = useQuery({
@@ -41,15 +40,18 @@ const PatientPayments = ({ user, patient }) => {
     }
 
     function handleAddPayment() {
-        modalRef.current.open()
+        setModalMode('paymentForm')
+        dialogRef.current.open()
     }
 
     function handlePrintCheque(payment) {
+        setModalMode('cheque')
         setCurrentPayment(payment)
-        chequeModalRef.current.open()
+        dialogRef.current.open()
     }
 
-    function handleOpenModal() {
+    function handleMakePayment() {
+        setModalMode('cashierForm')
         dialogRef.current.open()
     }
     return (
@@ -79,7 +81,7 @@ const PatientPayments = ({ user, patient }) => {
                                 {user.role === 'cashier' && (
                                     <button
                                         className="my-4 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        onClick={handleOpenModal}
+                                        onClick={handleMakePayment}
                                     >
                                         To&apos;lov qilish
                                     </button>
@@ -162,21 +164,25 @@ const PatientPayments = ({ user, patient }) => {
                     </>
                 )}
             </div>
-            <ModalComponent ref={chequeModalRef}>
-                <Cheque
-                    payment={currentPayment}
-                    onModalClose={() => chequeModalRef.current.close()}
-                />
-            </ModalComponent>
-            <ModalComponent ref={modalRef}>
-                <PaymentForm
-                    refetchFn={refetch}
-                    patientId={patient.id}
-                    onModalClose={() => modalRef.current.close()}
-                />
-            </ModalComponent>
             <ModalComponent ref={dialogRef}>
-                <CashierForm onModalClose={() => dialogRef.current.close()} />
+                {modalMode === 'cashierForm' && (
+                    <CashierForm
+                        onModalClose={() => dialogRef.current.close()}
+                    />
+                )}
+                {modalMode === 'paymentForm' && (
+                    <PaymentForm
+                        refetchFn={refetch}
+                        patientId={patient.id}
+                        onModalClose={() => dialogRef.current.close()}
+                    />
+                )}
+                {modalMode === 'cheque' && (
+                    <Cheque
+                        payment={currentPayment}
+                        onModalClose={() => dialogRef.current.close()}
+                    />
+                )}
             </ModalComponent>
         </div>
     )

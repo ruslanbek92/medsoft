@@ -198,6 +198,7 @@ export async function getTest(paymentId) {
     return (await getDoc(doc(db, 'tests', paymentId))).data()
 }
 export async function getInvestigationTemplate(name) {
+    console.log('getter investigation name', name)
     const querySnapShots = await getDocs(collection(db, 'investigations'))
     const investigation = querySnapShots.docs
         .map((item) => item.data())

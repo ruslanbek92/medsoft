@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print'
 
 export const HistoryView = ({ type, consultation, onModalClose }) => {
+    console.log('history', consultation.report.indicators)
     const contentRef = useRef(null)
     const handlePrint = useReactToPrint({
         contentRef,
@@ -108,7 +109,7 @@ export const HistoryView = ({ type, consultation, onModalClose }) => {
                         <p className="font-semibold w-36">Aniqlandi:</p>
                         <ul>
                             {consultation.report.indicators.map((item) => (
-                                <li key={Date.now()}>
+                                <li key={item.id}>
                                     {item.name}: {item.result} normada:
                                     {item.norm}
                                 </li>
@@ -118,7 +119,7 @@ export const HistoryView = ({ type, consultation, onModalClose }) => {
                     <div className="flex border-b py-2">
                         <p className="font-semibold w-36">Xulosa:</p>
                         <p className="font-semibold text-slate-600">
-                            {consultation.conclusion}
+                            {consultation.report.conclusion}
                         </p>
                     </div>
                     <div className="flex border-b py-2">
