@@ -9,24 +9,42 @@ function Reports() {
 
     if (user.role === 'doctor') {
         content = (
-            <ul>
+            <ul className="mt-10 p-4 flex gap-5 font-semibold">
                 <li>
-                    <Link to="doctor-report">Doktor hisoboti</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="doctor-report"
+                    >
+                        Doktor hisoboti
+                    </Link>
                 </li>
                 <li>
-                    <Link to="doctor-revision">Doktor sverkasi</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="doctor-revision"
+                    >
+                        Doktor sverkasi
+                    </Link>
                 </li>
             </ul>
         )
     } else if (user.role === 'investigator') {
         console.log('investigator if')
         content = (
-            <ul>
+            <ul className="mt-10 p-4 flex gap-5 font-semibold">
                 <li>
-                    <Link to="investigator-report">Tekshiruvchi hisoboti</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="investigator-report"
+                    >
+                        Tekshiruvchi hisoboti
+                    </Link>
                 </li>
                 <li>
-                    <Link to="investigator-revision">
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="investigator-revision"
+                    >
                         Tekshiruvchi sverkasi
                     </Link>
                 </li>
@@ -34,33 +52,63 @@ function Reports() {
         )
     } else if (user.role === 'admin') {
         content = (
-            <ul>
+            <ul className="mt-10 p-4 flex gap-5 font-semibold">
                 <li>
-                    <Link to="doctor-report">Doktor hisoboti</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="doctor-report"
+                    >
+                        Doktor hisoboti
+                    </Link>
                 </li>
                 <li>
-                    <Link to="doctor-revision">Doktor sverkasi</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="doctor-revision"
+                    >
+                        Doktor sverkasi
+                    </Link>
                 </li>
                 <li>
-                    <Link to="investigator-report">Tekshiruvchi hisoboti</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="investigator-report"
+                    >
+                        Tekshiruvchi hisoboti
+                    </Link>
                 </li>
                 <li>
-                    <Link to="investigator-revision">
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="investigator-revision"
+                    >
                         Tekshiruvchi sverkasi
                     </Link>
                 </li>
                 <li>
-                    <Link to="cashier-revision">Kassir sverkasi</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="cashier-revision"
+                    >
+                        Kassir sverkasi
+                    </Link>
                 </li>
                 <li>
-                    <Link to="cashier-report">Kassir hisoboti</Link>
+                    <Link
+                        className="p-4 border hover:border-black rounded-md"
+                        to="cashier-report"
+                    >
+                        Kassir hisoboti
+                    </Link>
                 </li>
             </ul>
         )
     }
     return (
-        <div>
-            <h3>Hisobotlar</h3>
+        <div className="p-4 pt-8 w-full md:w-4/5">
+            <h2 className="text-2xl pl-2 pb-4 mb-4 font-bold border-b border-b-gray-400 shadow-md">
+                Hisobotlar
+            </h2>
             {content}
         </div>
     )
