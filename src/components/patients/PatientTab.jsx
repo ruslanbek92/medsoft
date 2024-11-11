@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
-import { GeneralInfo } from './GeneralInfo'
+import { GeneralInfo } from './generalInfo'
 import PatientPayments from './patientPayments'
 import { MedicalHistory } from './doctorfield/medicalHistory'
 import QueueControl from '../queues/queueControl'

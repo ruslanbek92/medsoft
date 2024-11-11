@@ -12,7 +12,7 @@ const Cheque = ({ payment, onModalClose }) => {
         payment && (
             <>
                 <div ref={contentRef}>
-                    <h3 className="font-bold mb-2">Chek chiqarish</h3>
+                    <h3 className="font-bold mb-2">Chek</h3>
                     <div className="border rounded px-2">
                         <div className="flex border-b py-2">
                             <p className="font-semibold w-36">Xizmat nomi:</p>
@@ -71,12 +71,14 @@ const Cheque = ({ payment, onModalClose }) => {
                         </div>
                     </div>
                 </div>
-                <button
-                    className="my-4 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    onClick={handlePrint}
-                >
-                    chop etish
-                </button>
+                <div className="flex justify-end">
+                    <button
+                        className="my-4 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={handlePrint}
+                    >
+                        chop etish
+                    </button>
+                </div>
                 <button
                     className="mt-4 flex justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     onClick={onModalClose}
